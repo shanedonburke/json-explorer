@@ -1,4 +1,5 @@
 <script lang="ts">
+  import _ from 'lodash';
   import InputStep from "./lib/InputStep.svelte";
   import ExploreStep from "./lib/ExploreStep.svelte";
 
@@ -16,6 +17,11 @@
 
   function handleInputChange(event) {
     inputJson = event.detail.value;
+
+    const newModel = parseJsonString(inputJson);
+    if (!_.isEqual(model, newModel)) {
+      model = newModel;
+    }
   }
 
   function handleSetModel(event) {
@@ -25,7 +31,6 @@
   let currStep = 0;
   let inputJson = ["{", '\t"x": 5', "}"].join("\n");
   let model: any;
-  $: inputJson, model = parseJsonString(inputJson);
 </script>
 
 <main>
@@ -43,17 +48,14 @@
         <span><b>Step 3: </b>Export</span>
       </button>
     </div>
-    <!-- {#if currStep === 0} -->
     <div style="width: 100%; height: 100%">
       <div style="width: 100%; height: 100%" class:display-none={currStep !== 0}>
-        <InputStep {inputJson} on:inputChange={handleInputChange} />
+        <InputStep {inputJson} on:inputChange={handleInputChange} on:nextStep={() => setCurrStep(1)} />
       </div>
       <div style="width: 100%; height: 100%" class:display-none={currStep !== 1}>
         <ExploreStep {inputJson} {model} on:setModel={handleSetModel} />
       </div>
     </div>
-    <!-- {:else if currStep === 1} -->
-    <!-- {/if} -->
   </div>
 </main>
 
@@ -72,7 +74,7 @@
 
   .app-navbar {
     width: 100%;
-    height: 50px;
+    height: 40px;
     display: flex;
     justify-content: space-evenly;
     border-bottom: 1px solid #d0d0d0;

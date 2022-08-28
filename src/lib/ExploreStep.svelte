@@ -24,7 +24,9 @@
       if (_.isEmpty(value)) {
         editor.getModel().setValue(JSON.stringify(model, null, "\t"));
       } else {
-        editor.getModel().setValue(JSON.stringify(_.get(model, value), null, "\t"));
+        editor
+          .getModel()
+          .setValue(JSON.stringify(_.get(model, value), null, "\t"));
       }
     }
   });
@@ -52,6 +54,7 @@
         : JSON.stringify(_.get(model, editModelPathValue), null, "\t"),
       language: "json",
       automaticLayout: true,
+      scrollBeyondLastLine: false,
     });
 
     editor.onDidChangeModelContent(() => {

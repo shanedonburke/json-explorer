@@ -17,11 +17,13 @@
     return [];
   }
 
-  function expand() {
+  function expand(event: PointerEvent) {
+    event.stopPropagation();
     isExpanded = true;
   }
 
-  function collapse() {
+  function collapse(event: PointerEvent) {
+    event.stopPropagation();
     isExpanded = false;
   }
 
@@ -69,7 +71,7 @@
   }
 
   .tree-node-text-padded {
-    padding-left: 10px;
+    padding-left: 22px;
   }
 
   .tree-node-children {

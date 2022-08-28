@@ -11,7 +11,7 @@
   let isExpanded = false;
 
   function getObjectEntries(val): Array<[string, any]> {
-    if (typeof val === "object") {
+    if (_.isObject(val)) {
       return Object.entries(val);
     }
     return [];

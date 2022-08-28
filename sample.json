@@ -1,0 +1,78 @@
+{
+  "errors": [],
+  "models": {
+    "iss": "https://www.piano.io",
+    "bid": "uDVp3CaxHnOZpxbbVOVDJII5RyVziuFnrwL2kAlkmgmbgTcFGQwjZo9JFWIE",
+    "executionStatsContext": "{kpdx}AAABJ4Sqrkfw_xkKABI8dURWcDNDYXhIbk9acHhiYlZPVkRKSUk1UnlWeml1Rm5yd0wya0Fsa21nbWJnVGNGR1F3alpvOUpGV0lFGhBsN2RraDN1NjcxOWo1YW9qIkt2LTIwMjItMDgtMjgtMTItNDktMzMtMTA3LXBncUlVYmhiUzB2T0xZSHYtMzNmYTg0MDIzNWQxYzdmZmIxNmMwMTM5MjgwZjZlNzQqhQFNb3ppbGxhLzUuMCAoV2luZG93cyBOVCAxMC4wOyBXaW42NDsgeDY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvMTA0LjAuNTExMi4xMDIgU2FmYXJpLzUzNy4zNiBPUFIvOTAuMC40NDgwLjU0",
+    "result": {
+      "debugMessages": [],
+      "events": [
+        {
+          "eventType": "experienceExecute",
+          "eventParams": {
+            "accessList": [],
+            "user": {
+              "uid": "anon",
+              "firstName": "N/A",
+              "lastName": "N/A",
+              "email": "N/A"
+            }
+          },
+          "eventModuleParams": {
+            "moduleId": "N/A",
+            "moduleName": "N/A"
+          },
+          "eventExecutionContext": {
+            "executionId": "N/A",
+            "experienceId": "N/A",
+            "experienceVersion": null,
+            "trackingId": "N/A",
+            "splitTests": [],
+            "currentMeterName": null,
+            "activeMeters": [],
+            "allMeters": [],
+            "user": {
+              "uid": "anon",
+              "firstName": "N/A",
+              "lastName": "N/A",
+              "email": "N/A",
+              "premium": "false"
+            },
+            "region": "PA",
+            "countryCode": "US",
+            "accessList": [],
+            "userSegments": {},
+            "creditStates": []
+          },
+          "eventConditions": []
+        }
+      ],
+      "swgEnabled": false,
+      "experiences": [
+        {
+          "id": "EXA3LXGAS28B",
+          "title": "AdBlock - Hard Block - Local Suite Pages",
+          "updateDate": "2021-03-15T19:22:27.000+0000",
+          "version": 4,
+          "type": "site",
+          "status": "LIVE",
+          "schedule": null
+        }
+      ]
+    },
+    "tac": {
+      "cookie_value": "",
+      "cookie_domain": ".weather.com"
+    },
+    "tbc": {
+      "cookie_value": "{kpex}AYR2IAEmj6lRSGefJhxt1bg7Ofvdlw81Xkb-hhfOLKiuax8JsgNgtdfoJOtZQKJyxynf974hMsIpDYRbHcILCmsuiLSwDmUGhC3VsUwbhjQ",
+      "cookie_domain": ".weather.com"
+    },
+    "timezone_offset": -14400000,
+    "xbc": {
+      "cookie_value": "{kpex}0SPAnjn1_DsjDde1KOOr3187VuCe13QMJFA0ne4XyvBBl0LEzeDGHHoRyov_DGrL_obn2l0G4BXk-aqWjKMjfserDmJtC10CY-CLkOROT_px9pRaVDpIG4f9N02qGH1Q4lJ_uvfHWgvVK3ydBMcwBg",
+      "cookie_domain": ".weather.com"
+    }
+  },
+  "routes": {}
+}

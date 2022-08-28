@@ -19,7 +19,7 @@
     inputJson = event.detail.value;
 
     const newModel = parseJsonString(inputJson);
-    if (!_.isEqual(model, newModel)) {
+    if (newModel !== undefined && !_.isEqual(model, newModel)) {
       model = newModel;
     }
   }
@@ -30,7 +30,7 @@
 
   let currStep = 0;
   let inputJson = ["{", '\t"x": 5', "}"].join("\n");
-  let model: any;
+  let model = parseJsonString(inputJson);
 </script>
 
 <main>
@@ -48,7 +48,7 @@
         <span><b>Step 3: </b>Export</span>
       </button>
     </div>
-    <div style="width: 100%; height: 100%">
+    <div style="width: 100%; height: 100%; overflow-x: hidden">
       <div style="width: 100%; height: 100%" class:display-none={currStep !== 0}>
         <InputStep {inputJson} on:inputChange={handleInputChange} on:nextStep={() => setCurrStep(1)} />
       </div>
@@ -74,7 +74,7 @@
 
   .app-navbar {
     width: 100%;
-    height: 40px;
+    min-height: 40px;
     display: flex;
     justify-content: space-evenly;
     border-bottom: 1px solid #d0d0d0;

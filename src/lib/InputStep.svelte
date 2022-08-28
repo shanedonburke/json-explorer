@@ -124,7 +124,7 @@
   }
 
   .input-next-button:hover {
-    background-color: #2958d1;
+    background-color: #254fb9;
   }
 
   .input-next-button:active {

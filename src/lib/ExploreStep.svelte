@@ -12,6 +12,8 @@
   export let inputJson: string;
   export let model: any;
 
+  $: model, editor?.getModel() && editor.getModel().setValue(JSON.stringify(model, null, "\t"));
+
   let editorEl: HTMLDivElement = null;
   let editor: monaco.editor.IStandaloneCodeEditor;
   let Monaco: any;
@@ -58,14 +60,15 @@
     });
 
     editor.onDidChangeModelContent(() => {
-      const newVal = parseJsonString(editor.getModel().getValue());
+      const newModel = parseJsonString(editor.getModel().getValue());
 
-      if (newVal === undefined) return;
+      if (newModel === undefined) return;
+      if (_.isEqual(model, newModel)) return;
 
       if (_.isEmpty(editModelPathValue)) {
-        dispatch("setModel", { model: newVal });
+        dispatch("setModel", { model: newModel });
       } else {
-        _.set(model, editModelPathValue, newVal);
+        _.set(model, editModelPathValue, newModel);
       }
     });
 
@@ -94,6 +97,7 @@
   .explore-tree {
     width: 100%;
     height: 100%;
+    overflow: auto;
   }
 
   .explore-monaco-editor {

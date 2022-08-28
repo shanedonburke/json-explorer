@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
   import TreeNode from "./TreeNode.svelte";
+  import { editModelPath } from "./stores";
 
   const dispatch = createEventDispatcher();
 
@@ -15,7 +16,18 @@
   let editor: monaco.editor.IStandaloneCodeEditor;
   let Monaco: any;
 
-  let editPath = "";
+  let editModelPathValue: Array<string> = [];
+
+  editModelPath.subscribe((value) => {
+    editModelPathValue = value;
+    if (!_.isNil(editor?.getModel())) {
+      if (_.isEmpty(value)) {
+        editor.getModel().setValue(JSON.stringify(model, null, "\t"));
+      } else {
+        editor.getModel().setValue(JSON.stringify(_.get(model, value), null, "\t"));
+      }
+    }
+  });
 
   function parseJsonString(str): string | undefined {
     try {
@@ -42,10 +54,9 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value:
-        editPath === ""
-          ? JSON.stringify(model, null, "\t")
-          : JSON.stringify(_.get(model, editPath), null, "\t"),
+      value: _.isEmpty(editModelPathValue)
+        ? JSON.stringify(model, null, "\t")
+        : JSON.stringify(_.get(model, editModelPathValue), null, "\t"),
       language: "json",
       automaticLayout: true,
     });
@@ -55,10 +66,10 @@
 
       if (newVal === undefined) return;
 
-      if (editPath === "") {
+      if (_.isEmpty(editModelPathValue)) {
         dispatch("setModel", { model: newVal });
       } else {
-        _.set(model, editPath, newVal);
+        _.set(model, editModelPathValue, newVal);
         console.log(model);
       }
     });
@@ -72,7 +83,7 @@
 <div class="explore-container">
   <div class="explore-tree">
     {#each getObjectEntries(model) as [key, value]}
-      <TreeNode {key} {value} />
+      <TreeNode {key} {value} modelPath={[key]} />
     {/each}
   </div>
   <div bind:this={editorEl} class="explore-monaco-editor" />
@@ -90,7 +101,6 @@
   .explore-tree {
     width: 100%;
     height: 100%;
-    padding-left: 5px;
   }
 
   .explore-monaco-editor {

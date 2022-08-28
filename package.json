@@ -12,6 +12,7 @@
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.1",
     "@tsconfig/svelte": "^3.0.0",
+    "@types/lodash": "^4.14.184",
     "svelte": "^3.49.0",
     "svelte-check": "^2.8.0",
     "svelte-preprocess": "^4.10.7",
@@ -20,6 +21,7 @@
     "vite": "^3.0.7"
   },
   "dependencies": {
+    "iconify-icon": "^1.0.0-beta.3",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.34.0"
   }

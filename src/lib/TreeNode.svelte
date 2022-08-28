@@ -1,14 +1,16 @@
 <script lang="ts">
-  import _ from "lodash";
+  import _, { isEmpty } from "lodash";
   import TreeNode from "./TreeNode.svelte";
   import "iconify-icon";
-  import { editModelPath } from './stores';
+  import { editModelPath } from "./stores";
 
   export let key: string;
   export let value: any;
   export let modelPath: Array<string>;
 
   let isExpanded = false;
+
+  $: valueDisplayText = `= ${valueToString(value)}`;
 
   function getObjectEntries(val): Array<[string, any]> {
     if (_.isObject(val)) {
@@ -30,6 +32,15 @@
   function handleThisNodeClick() {
     editModelPath.update(() => modelPath);
   }
+
+  function valueToString(): string {
+    if (_.isEqual(value, {})) {
+      return "{}";
+    } else if (_.isEqual(value, [])) {
+      return "[]";
+    }
+    return _.toString(value);
+  }
 </script>
 
 <div>
@@ -48,11 +59,21 @@
       on:click={expand}
       class:display-none={isExpanded || _.isEmpty(getObjectEntries(value))}
     />
-    <span class:tree-node-text-padded={_.isEmpty(getObjectEntries(value))}>{key}</span>
+    <span
+      class:tree-node-text-padded={_.isEmpty(getObjectEntries(value))}
+      class="tree-node-key-text">{key}</span
+    >
+    {#if _.isEmpty(getObjectEntries(value))}
+      <span class="tree-node-value-text">{valueDisplayText}</span>
+    {/if}
   </div>
   <div class="tree-node-children" class:display-none={!isExpanded}>
     {#each getObjectEntries(value) as [childKey, childValue]}
-      <TreeNode key={childKey} value={childValue} modelPath={[...modelPath, childKey]} />
+      <TreeNode
+        key={childKey}
+        value={childValue}
+        modelPath={[...modelPath, childKey]}
+      />
     {/each}
   </div>
 </div>
@@ -68,6 +89,19 @@
 
   .tree-node:hover {
     background-color: #00000008;
+  }
+
+  .tree-node-key-text {
+    overflow: visible;
+    font-weight: 500;
+  }
+
+  .tree-node-value-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 0.5ch;
+    opacity: 0.7;
   }
 
   .tree-node-text-padded {

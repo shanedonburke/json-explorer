@@ -1,0 +1,104 @@
+<script lang="ts">
+  import InputStep from "./lib/InputStep.svelte";
+  import ExploreStep from "./lib/ExploreStep.svelte";
+
+  function parseJsonString(str) {
+    try {
+      return JSON.parse(str);
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  function setCurrStep(clickedStep: number): void {
+    currStep = clickedStep;
+  }
+
+  function handleInputChange(event) {
+    inputJson = event.detail.value;
+  }
+
+  function handleSetModel(event) {
+    model = event.detail.model;
+  }
+
+  let currStep = 0;
+  let inputJson = ["{", '\t"x": 5', "}"].join("\n");
+  let model: any;
+  $: inputJson, model = parseJsonString(inputJson);
+</script>
+
+<main>
+  <div class="app-container">
+    <div class="app-navbar">
+      <button class:selected={currStep === 0} on:click={() => setCurrStep(0)}>
+        <span><b>Step 1: </b>Input</span>
+      </button>
+      <div class="app-navbar-btn-divider" />
+      <button class:selected={currStep === 1} on:click={() => setCurrStep(1)}>
+        <span><b>Step 2: </b>Explore/Edit</span>
+      </button>
+      <div class="app-navbar-btn-divider" />
+      <button class:selected={currStep === 2} on:click={() => setCurrStep(2)}>
+        <span><b>Step 3: </b>Export</span>
+      </button>
+    </div>
+    <!-- {#if currStep === 0} -->
+    <div style="width: 100%; height: 100%">
+      <div style="width: 100%; height: 100%" class:hidden={currStep !== 0}>
+        <InputStep {inputJson} on:inputChange={handleInputChange} />
+      </div>
+      <div style="width: 100%; height: 100%" class:hidden={currStep !== 1}>
+        <ExploreStep {inputJson} {model} on:setModel={handleSetModel} />
+      </div>
+    </div>
+    <!-- {:else if currStep === 1} -->
+    <!-- {/if} -->
+  </div>
+</main>
+
+<style>
+  main {
+    width: 100%;
+    height: 100%;
+  }
+
+  .app-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-navbar {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: space-evenly;
+    border-bottom: 1px solid #d0d0d0;
+  }
+
+  .app-navbar > button {
+    width: 100%;
+    height: 100%;
+    background-color: #f8f8f8;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .app-navbar > button.selected {
+    background-color: #e5e5e5;
+  }
+
+  .app-navbar-btn-divider {
+    width: 1px;
+    height: 100%;
+    background-color: #dfdfdf;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>

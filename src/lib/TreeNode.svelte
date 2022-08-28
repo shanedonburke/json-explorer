@@ -61,6 +61,7 @@
     justify-content: flex-start;
     align-items: center;
     line-height: 22px;
+    font-size: 14px;
   }
 
   .tree-node:hover {

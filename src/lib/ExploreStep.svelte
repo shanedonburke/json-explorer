@@ -70,7 +70,6 @@
         dispatch("setModel", { model: newVal });
       } else {
         _.set(model, editModelPathValue, newVal);
-        console.log(model);
       }
     });
 
@@ -82,9 +81,7 @@
 
 <div class="explore-container">
   <div class="explore-tree">
-    {#each getObjectEntries(model) as [key, value]}
-      <TreeNode {key} {value} modelPath={[key]} />
-    {/each}
+    <TreeNode key="Root" value={model} modelPath={[]} />
   </div>
   <div bind:this={editorEl} class="explore-monaco-editor" />
 </div>

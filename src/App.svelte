@@ -45,10 +45,10 @@
     </div>
     <!-- {#if currStep === 0} -->
     <div style="width: 100%; height: 100%">
-      <div style="width: 100%; height: 100%" class:hidden={currStep !== 0}>
+      <div style="width: 100%; height: 100%" class:display-none={currStep !== 0}>
         <InputStep {inputJson} on:inputChange={handleInputChange} />
       </div>
-      <div style="width: 100%; height: 100%" class:hidden={currStep !== 1}>
+      <div style="width: 100%; height: 100%" class:display-none={currStep !== 1}>
         <ExploreStep {inputJson} {model} on:setModel={handleSetModel} />
       </div>
     </div>
@@ -96,9 +96,5 @@
     width: 1px;
     height: 100%;
     background-color: #dfdfdf;
-  }
-
-  .hidden {
-    display: none;
   }
 </style>

@@ -78,8 +78,4 @@
     margin-left: 10px;
     border-left: 1px solid #ccc;
   }
-
-  .display-none {
-    display: none;
-  }
 </style>

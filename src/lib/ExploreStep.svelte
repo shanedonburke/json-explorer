@@ -37,13 +37,6 @@
     }
   }
 
-  function getObjectEntries(val): Array<[string, any]> {
-    if (typeof val === "object") {
-      return Object.entries(val);
-    }
-    return [];
-  }
-
   onMount(async () => {
     // @ts-ignore
     self.MonacoEnvironment = {

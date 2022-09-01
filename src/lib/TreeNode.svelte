@@ -2,7 +2,13 @@
   import _ from "lodash";
   import TreeNode from "./TreeNode.svelte";
   import "iconify-icon";
-  import { collapsePath, editModelPath, expandedModelPaths, expandPath } from "./stores";
+  import {
+    collapsePath,
+    editModelPath,
+    expandedModelPaths,
+    expandPath,
+  } from "./stores";
+  import { valueToString } from "./util";
 
   export let key: string;
   export let value: any;
@@ -10,7 +16,7 @@
 
   let isExpanded = false;
 
-  $: valueDisplayText = `= ${valueToString()}`;
+  $: valueDisplayText = `= ${valueToString(value)}`;
 
   function getObjectEntries(val): Array<[string, any]> {
     if (_.isObject(val)) {
@@ -31,15 +37,6 @@
 
   function handleThisNodeClick() {
     editModelPath.update(() => modelPath);
-  }
-
-  function valueToString(): string {
-    if (_.isEqual(value, {})) {
-      return "{}";
-    } else if (_.isEqual(value, [])) {
-      return "[]";
-    }
-    return _.toString(value);
   }
 
   expandedModelPaths.subscribe((value) => {

@@ -1,5 +1,5 @@
-import { writable, type Writable } from 'svelte/store';
-import _ from 'lodash';
+import { writable, type Writable } from "svelte/store";
+import _ from "lodash";
 
 export const editModelPath: Writable<Array<string>> = writable([]);
 

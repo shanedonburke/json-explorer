@@ -1,8 +1,8 @@
 <script lang="ts">
-  import _, { isEmpty } from "lodash";
+  import _ from "lodash";
   import TreeNode from "./TreeNode.svelte";
   import "iconify-icon";
-  import { editModelPath } from "./stores";
+  import { collapsePath, editModelPath, expandedModelPaths, expandPath } from "./stores";
 
   export let key: string;
   export let value: any;
@@ -10,7 +10,7 @@
 
   let isExpanded = false;
 
-  $: valueDisplayText = `= ${valueToString(value)}`;
+  $: valueDisplayText = `= ${valueToString()}`;
 
   function getObjectEntries(val): Array<[string, any]> {
     if (_.isObject(val)) {
@@ -21,12 +21,12 @@
 
   function expand(event: PointerEvent) {
     event.stopPropagation();
-    isExpanded = true;
+    expandPath(modelPath);
   }
 
   function collapse(event: PointerEvent) {
     event.stopPropagation();
-    isExpanded = false;
+    collapsePath(modelPath);
   }
 
   function handleThisNodeClick() {
@@ -41,6 +41,16 @@
     }
     return _.toString(value);
   }
+
+  expandedModelPaths.subscribe((value) => {
+    isExpanded = false;
+
+    for (const path of value) {
+      if (_.isEqual(path, modelPath)) {
+        isExpanded = true;
+      }
+    }
+  });
 </script>
 
 <div>
@@ -83,7 +93,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    line-height: 22px;
+    line-height: 16px;
     font-size: 14px;
   }
 

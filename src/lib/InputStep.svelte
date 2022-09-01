@@ -28,6 +28,7 @@
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,
+      minimap: { enabled: false },
     });
 
     editor.getModel().onDidChangeContent(() => {
@@ -40,14 +41,6 @@
       editor.dispose();
     };
   });
-
-  function parseJsonString(str): string | undefined {
-    try {
-      return JSON.parse(str);
-    } catch (e) {
-      return undefined;
-    }
-  }
 
   function beautify() {
     editor.trigger("beautify", 'editor.action.formatDocument', null);
@@ -102,25 +95,25 @@
     height: 100%;
     width: 100px;
     border-radius: 3px;
-    border: none;
-    box-shadow: 1px 1px 3px #5a5a5a;
   }
 
   .input-beautify-button {
-    background-color: #d5d5d5;
+    background-color: #f0f0f0;
+    border: 1px solid #aaa;
   }
 
   .input-beautify-button:hover {
-    background-color: #c5c5c5;
+    background-color: #e5e5e5;
   }
 
   .input-beautify-button:active {
-    background-color: #b5b5b5;
+    background-color: #dadada;
   }
 
   .input-next-button {
     background-color: #2a60eb;
     color: white;
+    border: none;
   }
 
   .input-next-button:hover {

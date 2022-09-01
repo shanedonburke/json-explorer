@@ -21,6 +21,7 @@
     "vite": "^3.0.7"
   },
   "dependencies": {
+    "deepdash": "^5.3.9",
     "iconify-icon": "^1.0.0-beta.3",
     "lodash": "^4.17.21",
     "monaco-editor": "^0.34.0"

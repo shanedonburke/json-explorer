@@ -34,7 +34,7 @@
   function handleSplitterMouseMove(event: MouseEvent) {
     if (isSplitterMouseDown) {
       const containerWidth = containerEl.clientWidth;
-      const mouseX = event.clientX - containerEl.clientLeft;
+      const mouseX = event.clientX - containerEl.offsetLeft;
       editorEl.parentElement.style.width = `${mouseX - 8}px`;
       resultsEl.style.width = `${containerWidth - mouseX - 8}px`;
     }

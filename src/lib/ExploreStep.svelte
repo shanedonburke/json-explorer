@@ -60,23 +60,15 @@
 
   function handleSplitterMouseMove(event: MouseEvent) {
     if (isHSplitterMouseDown) {
-      const splitterWidth = hSplitterEl.offsetWidth;
-      const containerCenter =
-        editContainerEl.clientWidth / 2 + editContainerEl.clientLeft;
-      const treeOffset =
-        event.clientX - containerCenter - event.offsetX / 2 - splitterWidth / 4;
-      const editorOffset =
-        event.clientX - containerCenter - event.offsetX / 2 + splitterWidth;
-      treeEl.style.width = `calc(50% + ${treeOffset}px)`;
-      editorEl.parentElement.style.width = `calc(50% - 1px - ${editorOffset}px)`;
+      const containerWidth = containerEl.clientWidth;
+      const mouseX = event.clientX - containerEl.offsetLeft;
+      treeEl.style.width = `${mouseX - 8}px`;
+      editorEl.parentElement.style.width = `${containerWidth - mouseX - 8}px`;
     } else if (isVSplitterMouseDown) {
-      const splitterHeight = vSplitterEl.offsetHeight;
-      const containerCenter =
-        containerEl.clientHeight / 2 + containerEl.offsetTop;
-      const editOffset = event.clientY - containerCenter - splitterHeight / 2;
-      const searchOffset = event.clientY - containerCenter + splitterHeight / 2;
-      editContainerEl.style.height = `calc(50% + ${editOffset}px)`;
-      searchEl.style.height = `calc(50% - ${searchOffset}px)`;
+      const containerHeight = containerEl.clientHeight;
+      const mouseY = event.clientY - containerEl.offsetTop;
+      editContainerEl.style.height = `${mouseY - 8}px`;
+      searchEl.style.height = `${containerHeight - mouseY - 8}px`;
     }
   }
 

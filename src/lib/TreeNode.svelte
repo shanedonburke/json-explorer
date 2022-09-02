@@ -8,7 +8,7 @@
     expandedModelPaths,
     expandPath,
   } from "./stores";
-  import { valueToString } from "./util";
+  import { getObjectEntries, valueToString } from "./util";
 
   export let key: string;
   export let value: any;
@@ -17,13 +17,6 @@
   let isExpanded = false;
 
   $: valueDisplayText = `= ${valueToString(value)}`;
-
-  function getObjectEntries(val): Array<[string, any]> {
-    if (_.isObject(val)) {
-      return Object.entries(val);
-    }
-    return [];
-  }
 
   function expand(event: PointerEvent) {
     event.stopPropagation();

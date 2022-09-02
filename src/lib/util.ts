@@ -16,3 +16,10 @@ export function valueToString(value: any): string {
   }
   return _.toString(value);
 }
+
+export function getObjectEntries(val: any): Array<[string, any]> {
+  if (_.isPlainObject(val) || _.isArray(val)) {
+    return Object.entries(val);
+  }
+  return [];
+}

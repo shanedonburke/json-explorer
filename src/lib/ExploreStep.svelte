@@ -14,9 +14,7 @@
   export let inputJson: string;
   export let model: any;
 
-  $: model,
-    editor?.getModel() &&
-      editor.getModel().setValue(JSON.stringify(model, null, "\t"));
+  $: model, editor?.getModel()?.setValue(JSON.stringify(model, null, "\t"));
 
   let editorEl: HTMLDivElement = null;
   let editor: monaco.editor.IStandaloneCodeEditor;
@@ -66,7 +64,7 @@
       const containerCenter =
         editContainerEl.clientWidth / 2 + editContainerEl.clientLeft;
       const treeOffset =
-        event.clientX - containerCenter - event.offsetX / 2 - splitterWidth / 2;
+        event.clientX - containerCenter - event.offsetX / 2 - splitterWidth / 4;
       const editorOffset =
         event.clientX - containerCenter - event.offsetX / 2 + splitterWidth;
       treeEl.style.width = `calc(50% + ${treeOffset}px)`;
@@ -143,7 +141,7 @@
     on:mousedown={handleVSplitterMouseDown}
   />
   <div bind:this={searchEl} class="explore-search-container">
-    <Search />
+    <Search model={model} />
   </div>
 </div>
 
@@ -156,15 +154,10 @@
   .explore-edit-container {
     width: 100%;
     height: calc(75% - 16px);
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
-    display: grid;
-    display: flex;
     display: block;
-    grid-template-columns: 1fr 16px 1fr;
     overflow: hidden;
     border-bottom: 1px solid #d0d0d0;
+    font-size: 0;
   }
 
   .explore-edit-container > div {
@@ -172,7 +165,7 @@
   }
 
   .explore-tree {
-    width: calc(50% - 16px);
+    width: calc(50% - 8px);
     height: 100%;
     overflow: auto;
     grid-column: 1;
@@ -197,7 +190,7 @@
   }
 
   .explore-monaco-editor-container {
-    width: calc(50% - 16px);
+    width: calc(50% - 8px);
     height: 100%;
     user-select: none;
   }
@@ -209,6 +202,6 @@
 
   .explore-search-container {
     width: 100%;
-    height: calc(25% - 16px);
+    height: 25%;
   }
 </style>

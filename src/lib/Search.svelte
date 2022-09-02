@@ -20,7 +20,6 @@
   let searchResults: Array<PathValuePair> = [];
 
   let containerEl: HTMLDivElement = null;
-  let editorContainerEl: HTMLDivElement = null;
   let splitterEl: HTMLDivElement = null;
   let resultsEl: HTMLDivElement = null;
 
@@ -31,6 +30,22 @@
   function handleSplitterMouseDown() {
     isSplitterMouseDown = true;
   }
+
+  function handleSplitterMouseMove(event: MouseEvent) {
+    if (isSplitterMouseDown) {
+      const containerWidth = containerEl.clientWidth;
+      const mouseX = event.clientX - containerEl.clientLeft;
+      editorEl.parentElement.style.width = `${mouseX - 8}px`;
+      resultsEl.style.width = `${containerWidth - mouseX - 8}px`;
+    }
+  }
+
+  function handleSplitterMouseUp() {
+    isSplitterMouseDown = false;
+  }
+
+  document.addEventListener("mousemove", handleSplitterMouseMove);
+  document.addEventListener("mouseup", handleSplitterMouseUp);
 
   onMount(async () => {
     // @ts-ignore
@@ -89,7 +104,7 @@
 </script>
 
 <div bind:this={containerEl} class="search-container">
-  <div bind:this={editorContainerEl} class="search-monaco-editor-container">
+  <div class="search-monaco-editor-container">
     <div bind:this={editorEl} class="search-monaco-editor" />
   </div>
   <div

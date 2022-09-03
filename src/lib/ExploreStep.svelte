@@ -6,8 +6,8 @@
   import { createEventDispatcher } from "svelte";
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
-  import { editModelPath } from "./stores";
-  import { parseJsonString } from "./util";
+  import { editModelPath, expandPath } from "./stores";
+  import { parseJsonString, pathArrayToString } from "./util";
 
   const dispatch = createEventDispatcher();
 
@@ -27,6 +27,9 @@
   let treeEl: HTMLDivElement = null;
   let searchEl: HTMLDivElement = null;
 
+  let isHSplitterMouseDown = false;
+  let isVSplitterMouseDown = false;
+
   editModelPath.subscribe((value) => {
     editModelPathValue = value;
     if (!_.isNil(editor?.getModel())) {
@@ -40,8 +43,9 @@
     }
   });
 
-  let isHSplitterMouseDown = false;
-  let isVSplitterMouseDown = false;
+  function handleRevealButtonClick() {
+    expandPath(editModelPathValue);
+  }
 
   function handleHSplitterMouseDown() {
     isHSplitterMouseDown = true;
@@ -119,6 +123,18 @@
     </div>
     <div class="splitter h-splitter" on:mousedown={handleHSplitterMouseDown} />
     <div class="monaco-editor-container">
+      <div class="edit-path">
+        <button
+          class="reveal-button"
+          on:click={handleRevealButtonClick}
+          title="Reveal in tree"
+        >
+          <iconify-icon icon="fe:target" width="20" height="20" />
+        </button>
+        <span class="edit-path-text"
+          >{pathArrayToString(editModelPathValue)}</span
+        >
+      </div>
       <div bind:this={editorEl} class="monaco-editor" />
     </div>
   </div>
@@ -180,8 +196,38 @@
   }
 
   .monaco-editor {
-    height: 100%;
+    height: calc(100% - 24px);
     width: 100%;
+  }
+
+  .edit-path {
+    width: 100%;
+    height: 24px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    background-color: #f8f8f8;
+    justify-content: flex-start;
+  }
+
+  .edit-path-text {
+    padding: 0 8px;
+  }
+
+  .reveal-button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    border-right: 1px solid #bbb;
+  }
+
+  .reveal-button:hover {
+    background-color: #00000010;
   }
 
   .search-container {

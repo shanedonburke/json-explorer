@@ -1,6 +1,8 @@
 import { writable, type Writable } from "svelte/store";
 import _ from "lodash";
 
+export const model: Writable<any> = writable();
+
 export const editModelPath: Writable<Array<string>> = writable([]);
 
 export const expandedModelPaths: Writable<Array<Array<string>>> = writable([]);

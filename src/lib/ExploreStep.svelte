@@ -3,18 +3,14 @@
   import type monaco from "monaco-editor";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
-  import { createEventDispatcher } from "svelte";
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
-  import { editModelPath, expandPath } from "./stores";
+  import { editModelPath, expandPath, model } from "./stores";
   import { parseJsonString, pathArrayToString } from "./util";
 
-  const dispatch = createEventDispatcher();
-
   export let inputJson: string;
-  export let model: any;
 
-  $: model, editor?.getModel()?.setValue(JSON.stringify(model, null, "\t"));
+  let modelValue: any;
 
   let editorEl: HTMLDivElement = null;
   let editor: monaco.editor.IStandaloneCodeEditor;
@@ -30,18 +26,33 @@
   let isHSplitterMouseDown = false;
   let isVSplitterMouseDown = false;
 
+  model.subscribe((value) => {
+    modelValue = value;
+
+    const editorValue = parseJsonString(editor?.getModel()?.getValue());
+    if (!_.isEqual(editorValue, value)) {
+      editor?.getModel()?.setValue(JSON.stringify(getEditValueFromModel(), null, "\t"));
+    }
+  });
+
   editModelPath.subscribe((value) => {
     editModelPathValue = value;
     if (!_.isNil(editor?.getModel())) {
       if (_.isEmpty(value)) {
-        editor.getModel().setValue(JSON.stringify(model, null, "\t"));
+        editor.getModel().setValue(JSON.stringify(modelValue, null, "\t"));
       } else {
         editor
           .getModel()
-          .setValue(JSON.stringify(_.get(model, value), null, "\t"));
+          .setValue(JSON.stringify(_.get(modelValue, value), null, "\t"));
       }
     }
   });
+
+  function getEditValueFromModel(): any {
+    return _.isEmpty(editModelPathValue)
+        ? modelValue
+        : _.get(modelValue, editModelPathValue);
+  }
 
   function handleRevealButtonClick() {
     expandPath(editModelPathValue);
@@ -87,9 +98,7 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: _.isEmpty(editModelPathValue)
-        ? JSON.stringify(model, null, "\t")
-        : JSON.stringify(_.get(model, editModelPathValue), null, "\t"),
+      value: JSON.stringify(getEditValueFromModel(), null, "\t"),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -98,15 +107,17 @@
     });
 
     editor.onDidChangeModelContent(() => {
-      const newModel = parseJsonString(editor.getModel().getValue());
+      const newValue = parseJsonString(editor.getModel().getValue());
 
-      if (newModel === undefined) return;
-      if (_.isEqual(model, newModel)) return;
+      if (newValue === undefined) return;
+      if (_.isEqual(getEditValueFromModel(), newValue)) return;
 
       if (_.isEmpty(editModelPathValue)) {
-        dispatch("setModel", { model: newModel });
+        model.update(() => newValue);        
       } else {
-        _.set(model, editModelPathValue, newModel);
+        const newModel = _.cloneDeep(modelValue);
+        _.set(newModel, editModelPathValue, newValue);
+        model.update(() => newModel);
       }
     });
 
@@ -119,7 +130,7 @@
 <div bind:this={containerEl} class="container">
   <div bind:this={editContainerEl} class="edit-container">
     <div bind:this={treeEl} class="tree">
-      <TreeNode key="Root" value={model} modelPath={[]} />
+      <TreeNode key="Root" value={modelValue} modelPath={[]} />
     </div>
     <div class="splitter h-splitter" on:mousedown={handleHSplitterMouseDown} />
     <div class="monaco-editor-container">
@@ -140,7 +151,7 @@
   </div>
   <div class="splitter v-splitter" on:mousedown={handleVSplitterMouseDown} />
   <div bind:this={searchEl} class="search-container">
-    <Search {model} />
+    <Search />
   </div>
 </div>
 

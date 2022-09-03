@@ -5,13 +5,14 @@
   import { onMount } from "svelte";
   import { getObjectEntries, parseJsonString } from "./util";
   import SearchResult from "./SearchResult.svelte";
+import { model } from "./stores";
 
   interface PathValuePair {
     path: Array<string>;
     value: any;
   }
 
-  export let model: any;
+  let modelValue: any;
 
   let editorEl: HTMLDivElement = null;
   let editor: monaco.editor.IStandaloneCodeEditor;
@@ -25,7 +26,9 @@
 
   let isSplitterMouseDown = false;
 
-  $: model, (pathValues = getAllPathValues());
+  $: modelValue, (pathValues = getAllPathValues());
+
+  model.subscribe((value) => modelValue = value);
 
   function handleSplitterMouseDown() {
     isSplitterMouseDown = true;
@@ -98,7 +101,7 @@
 
     while (stack.length > 0) {
       const path = stack.pop();
-      const value = _.isEmpty(path) ? model : _.get(model, path);
+      const value = _.isEmpty(path) ? modelValue : _.get(modelValue, path);
       pvs.push({ path, value });
 
       for (const entry of getObjectEntries(value)) {

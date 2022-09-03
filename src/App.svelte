@@ -2,6 +2,7 @@
   import _ from 'lodash';
   import InputStep from "./lib/InputStep.svelte";
   import ExploreStep from "./lib/ExploreStep.svelte";
+import { model } from './lib/stores';
 
   function parseJsonString(str) {
     try {
@@ -20,12 +21,8 @@
 
     const newModel = parseJsonString(inputJson);
     if (newModel !== undefined && !_.isEqual(model, newModel)) {
-      model = newModel;
+      model.update(() => newModel)
     }
-  }
-
-  function handleSetModel(event) {
-    model = event.detail.model;
   }
 
   let currStep = 0;
@@ -35,7 +32,8 @@
       c: [0, { d: 2 }]
     }
   }, null, "\t");
-  let model = parseJsonString(inputJson);
+
+  model.update(() => parseJsonString(inputJson));
 </script>
 
 <main>
@@ -58,7 +56,7 @@
         <InputStep {inputJson} on:inputChange={handleInputChange} on:nextStep={() => setCurrStep(1)} />
       </div>
       <div style="width: 100%; height: 100%" class:display-none={currStep !== 1}>
-        <ExploreStep {inputJson} {model} on:setModel={handleSetModel} />
+        <ExploreStep {inputJson} />
       </div>
     </div>
   </div>

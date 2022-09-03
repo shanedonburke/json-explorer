@@ -15,8 +15,13 @@
   export let modelPath: Array<string>;
 
   let isExpanded = false;
+  let isEditing = false;
 
   $: valueDisplayText = `= ${valueToString(value)}`;
+
+  editModelPath.subscribe((value) => {
+    isEditing = _.isEqual(modelPath, value)
+  });
 
   function expand(event: PointerEvent) {
     event.stopPropagation();
@@ -44,18 +49,18 @@
 </script>
 
 <div>
-  <div class="tree-node" on:click={handleThisNodeClick}>
+  <div class="tree-node" on:click={handleThisNodeClick} class:selected={isEditing}>
     <iconify-icon
       icon="bx:chevron-down"
-      width="22"
-      height="22"
+      width="18"
+      height="18"
       on:click={collapse}
       class:display-none={!isExpanded || _.isEmpty(getObjectEntries(value))}
     />
     <iconify-icon
       icon="bx:chevron-right"
-      width="22"
-      height="22"
+      width="18"
+      height="18"
       on:click={expand}
       class:display-none={isExpanded || _.isEmpty(getObjectEntries(value))}
     />
@@ -83,12 +88,19 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    line-height: 16px;
+    height: 18px;
+    line-height: 18px;
     font-size: 14px;
+    border-left: 4px solid transparent;
   }
 
   .tree-node:hover {
-    background-color: #00000008;
+    background-color: #0000000f;
+  }
+
+  .selected {
+    border-left: 4px solid #3d4;
+    background-color: #e5ffe5;
   }
 
   .key-text {
@@ -105,7 +117,7 @@
   }
 
   .text-padded {
-    padding-left: 22px;
+    padding-left: 18px;
   }
 
   .children {

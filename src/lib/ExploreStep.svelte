@@ -25,8 +25,6 @@
   let containerEl: HTMLDivElement = null;
   let editContainerEl: HTMLDivElement = null;
   let treeEl: HTMLDivElement = null;
-  let hSplitterEl: HTMLDivElement = null;
-  let vSplitterEl: HTMLDivElement = null;
   let searchEl: HTMLDivElement = null;
 
   editModelPath.subscribe((value) => {
@@ -92,6 +90,7 @@
       automaticLayout: true,
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
+      overviewRulerLanes: 0,
     });
 
     editor.onDidChangeModelContent(() => {
@@ -118,22 +117,14 @@
     <div bind:this={treeEl} class="tree">
       <TreeNode key="Root" value={model} modelPath={[]} />
     </div>
-    <div
-      bind:this={hSplitterEl}
-      class="h-splitter"
-      on:mousedown={handleHSplitterMouseDown}
-    />
+    <div class="splitter h-splitter" on:mousedown={handleHSplitterMouseDown} />
     <div class="monaco-editor-container">
       <div bind:this={editorEl} class="monaco-editor" />
     </div>
   </div>
-  <div
-    bind:this={vSplitterEl}
-    class="v-splitter"
-    on:mousedown={handleVSplitterMouseDown}
-  />
+  <div class="splitter v-splitter" on:mousedown={handleVSplitterMouseDown} />
   <div bind:this={searchEl} class="search-container">
-    <Search model={model} />
+    <Search {model} />
   </div>
 </div>
 
@@ -163,12 +154,16 @@
     user-select: none;
   }
 
+  .splitter {
+    user-select: none;
+    background-color: #f9f9f9;
+  }
+
   .h-splitter {
     width: 16px;
     height: 100%;
     border-left: 1px solid #b0b0b0;
     border-right: 1px solid #b0b0b0;
-    user-select: none;
   }
 
   .v-splitter {
@@ -176,7 +171,6 @@
     height: 16px;
     border-top: 1px solid #b0b0b0;
     border-bottom: 1px solid #b0b0b0;
-    user-select: none;
   }
 
   .monaco-editor-container {

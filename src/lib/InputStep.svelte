@@ -29,6 +29,7 @@
       automaticLayout: true,
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
+      overviewRulerLanes: 0,
     });
 
     editor.getModel().onDidChangeContent(() => {

@@ -21,7 +21,6 @@
   let searchResults: Array<PathValuePair> = [];
 
   let containerEl: HTMLDivElement = null;
-  let splitterEl: HTMLDivElement = null;
   let resultsEl: HTMLDivElement = null;
 
   let isSplitterMouseDown = false;
@@ -63,6 +62,7 @@
       automaticLayout: true,
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
+      overviewRulerLanes: 0,
     });
 
     editor.onDidChangeModelContent(() => {
@@ -82,6 +82,7 @@
               pv.path.every((pathSegment, i) => pv2.path[i] === pathSegment)
           );
         });
+        leafMatches.sort((a, b) => a.path.length - b.path.length);
         searchResults = leafMatches;
       }
     });
@@ -112,14 +113,10 @@
   <div class="monaco-editor-container">
     <div bind:this={editorEl} class="monaco-editor" />
   </div>
-  <div
-      bind:this={splitterEl}
-      class="splitter"
-      on:mousedown={handleSplitterMouseDown}
-    />
+  <div class="splitter" on:mousedown={handleSplitterMouseDown} />
   <div bind:this={resultsEl} class="results">
     {#each searchResults as res}
-      <SearchResult path={res.path} />
+      <SearchResult modelPath={res.path} />
     {/each}
   </div>
 </div>
@@ -153,6 +150,7 @@
     border-left: 1px solid #b0b0b0;
     border-right: 1px solid #b0b0b0;
     user-select: none;
+    background-color: #f9f9f9;
   }
 
   .results {

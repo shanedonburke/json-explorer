@@ -113,37 +113,37 @@
   });
 </script>
 
-<div bind:this={containerEl} class="explore-container">
-  <div bind:this={editContainerEl} class="explore-edit-container">
-    <div bind:this={treeEl} class="explore-tree">
+<div bind:this={containerEl} class="container">
+  <div bind:this={editContainerEl} class="edit-container">
+    <div bind:this={treeEl} class="tree">
       <TreeNode key="Root" value={model} modelPath={[]} />
     </div>
     <div
       bind:this={hSplitterEl}
-      class="explore-h-splitter"
+      class="h-splitter"
       on:mousedown={handleHSplitterMouseDown}
     />
-    <div class="explore-monaco-editor-container">
-      <div bind:this={editorEl} class="explore-monaco-editor" />
+    <div class="monaco-editor-container">
+      <div bind:this={editorEl} class="monaco-editor" />
     </div>
   </div>
   <div
     bind:this={vSplitterEl}
-    class="explore-v-splitter"
+    class="v-splitter"
     on:mousedown={handleVSplitterMouseDown}
   />
-  <div bind:this={searchEl} class="explore-search-container">
+  <div bind:this={searchEl} class="search-container">
     <Search model={model} />
   </div>
 </div>
 
 <style>
-  .explore-container {
+  .container {
     width: 100%;
     height: 100%;
   }
 
-  .explore-edit-container {
+  .edit-container {
     width: 100%;
     height: calc(75% - 16px);
     display: block;
@@ -152,28 +152,26 @@
     font-size: 0;
   }
 
-  .explore-edit-container > div {
+  .edit-container > div {
     display: inline-block;
   }
 
-  .explore-tree {
+  .tree {
     width: calc(50% - 8px);
     height: 100%;
     overflow: auto;
-    grid-column: 1;
     user-select: none;
   }
 
-  .explore-h-splitter {
+  .h-splitter {
     width: 16px;
     height: 100%;
     border-left: 1px solid #b0b0b0;
     border-right: 1px solid #b0b0b0;
-    grid-column: 2;
     user-select: none;
   }
 
-  .explore-v-splitter {
+  .v-splitter {
     width: 100%;
     height: 16px;
     border-top: 1px solid #b0b0b0;
@@ -181,18 +179,18 @@
     user-select: none;
   }
 
-  .explore-monaco-editor-container {
+  .monaco-editor-container {
     width: calc(50% - 8px);
     height: 100%;
     user-select: none;
   }
 
-  .explore-monaco-editor {
+  .monaco-editor {
     height: 100%;
     width: 100%;
   }
 
-  .explore-search-container {
+  .search-container {
     width: 100%;
     height: 25%;
   }

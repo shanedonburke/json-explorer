@@ -29,21 +29,26 @@
   }
 
   let currStep = 0;
-  let inputJson = ["{", '\t"x": 5', "}"].join("\n");
+  let inputJson = JSON.stringify({
+    a: {
+      b: 1,
+      c: [0, { d: 2 }]
+    }
+  }, null, "\t");
   let model = parseJsonString(inputJson);
 </script>
 
 <main>
-  <div class="app-container">
-    <div class="app-navbar">
+  <div class="container">
+    <div class="navbar">
       <button class:selected={currStep === 0} on:click={() => setCurrStep(0)}>
         <span><b>Step 1: </b>Input</span>
       </button>
-      <div class="app-navbar-btn-divider" />
+      <div class="navbar-btn-divider" />
       <button class:selected={currStep === 1} on:click={() => setCurrStep(1)}>
         <span><b>Step 2: </b>Explore/Edit</span>
       </button>
-      <div class="app-navbar-btn-divider" />
+      <div class="navbar-btn-divider" />
       <button class:selected={currStep === 2} on:click={() => setCurrStep(2)}>
         <span><b>Step 3: </b>Export</span>
       </button>
@@ -65,14 +70,14 @@
     height: 100%;
   }
 
-  .app-container {
+  .container {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .app-navbar {
+  .navbar {
     width: 100%;
     min-height: 40px;
     display: flex;
@@ -80,7 +85,7 @@
     border-bottom: 1px solid #d0d0d0;
   }
 
-  .app-navbar > button {
+  .navbar > button {
     width: 100%;
     height: 100%;
     background-color: #f8f8f8;
@@ -90,11 +95,11 @@
     align-items: center;
   }
 
-  .app-navbar > button.selected {
+  .navbar > button.selected {
     background-color: #e5e5e5;
   }
 
-  .app-navbar-btn-divider {
+  .navbar-btn-divider {
     width: 1px;
     height: 100%;
     background-color: #dfdfdf;

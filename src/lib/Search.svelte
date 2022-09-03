@@ -4,6 +4,7 @@
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
   import { getObjectEntries, parseJsonString } from "./util";
+  import SearchResult from "./SearchResult.svelte";
 
   interface PathValuePair {
     path: Array<string>;
@@ -68,7 +69,11 @@
       const query: any = parseJsonString(editor.getModel().getValue());
       if (query !== undefined) {
         const allMatches = pathValues.filter((pv) => {
-          return _.isMatch(pv.value, query);
+          if (_.isNumber(query) || query === null) {
+            return pv.value === query;
+          } else {
+            return _.isMatch(pv.value, query);
+          }
         });
         const leafMatches = allMatches.filter((pv) => {
           return !allMatches.some(
@@ -103,41 +108,46 @@
   }
 </script>
 
-<div bind:this={containerEl} class="search-container">
-  <div class="search-monaco-editor-container">
-    <div bind:this={editorEl} class="search-monaco-editor" />
+<div bind:this={containerEl} class="container">
+  <div class="monaco-editor-container">
+    <div bind:this={editorEl} class="monaco-editor" />
   </div>
   <div
       bind:this={splitterEl}
-      class="search-splitter"
+      class="splitter"
       on:mousedown={handleSplitterMouseDown}
     />
-  <div bind:this={resultsEl} class="search-results" />
+  <div bind:this={resultsEl} class="results">
+    {#each searchResults as res}
+      <SearchResult path={res.path} />
+    {/each}
+  </div>
 </div>
 
 <style>
-  .search-container {
+  .container {
+    display: flex;
     width: 100%;
     height: 100%;
     overflow: hidden;
     font-size: 0;
   }
 
-  .search-container > div {
+  .container > div {
     display: inline-block;
   }
 
-  .search-monaco-editor-container {
+  .monaco-editor-container {
     width: calc(50% - 8px);
     height: 100%;
   }
 
-  .search-monaco-editor {
+  .monaco-editor {
     width: 100%;
     height: 100%;
   }
 
-  .search-splitter {
+  .splitter {
     width: 16px;
     height: 100%;
     border-left: 1px solid #b0b0b0;
@@ -145,9 +155,9 @@
     user-select: none;
   }
 
-  .search-results {
+  .results {
     width: calc(50% - 8px);
     height: 100%;
-    background: yellowgreen;
+    font-size: 14px;
   }
 </style>

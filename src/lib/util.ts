@@ -23,3 +23,24 @@ export function getObjectEntries(val: any): Array<[string, any]> {
   }
   return [];
 }
+
+export function pathArrayToString(pathArr: Array<string>): string {
+  // let path = "";
+
+  // for (const segment of pathArr) {
+  //   const asNum = Number(segment);
+  //   if (!_.isNaN(asNum)) {
+  //     if (path.length > 0 && path[path.length - 1] === ".") {
+  //       path = path.substring(0, path.length - 1);
+  //     }
+  //     path += `[${asNum}]`;
+  //   } else {
+  //     path += `${segment}.`
+  //   }
+  // }
+  // if (path[path.length - 1] === ".") {
+  //   path = path.substring(0, path.length - 1);
+  // }
+  // return path;
+  return pathArr.join(".");
+}

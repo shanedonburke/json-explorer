@@ -51,22 +51,22 @@
   }
 </script>
 
-<div class="input-container">
+<div class="container">
   <div style="width: 100%; height: 100%">
-    <div bind:this={editorEl} class="input-monaco-editor" />
+    <div bind:this={editorEl} class="monaco-editor" />
   </div>
-  <div class="input-control-bar">
-    <button class="input-beautify-button" on:click={beautify}>
+  <div class="control-bar">
+    <button class="beautify-button" on:click={beautify}>
       <span>Beautify</span>
     </button>
-    <button class="input-next-button" on:click={goToNextStep}>
+    <button class="next-button" on:click={goToNextStep}>
       <span>Next</span>
     </button>
   </div>
 </div>
 
 <style>
-  .input-container {
+  .container {
     width: 100%;
     height: 100%;
     display: flex;
@@ -76,12 +76,12 @@
     box-sizing: border-box;
   }
 
-  .input-monaco-editor {
+  .monaco-editor {
     width: 100%;
     height: calc(100% - 100px);
   }
 
-  .input-control-bar {
+  .control-bar {
     width: 100%;
     height: 50px;
     padding: 7.5px;
@@ -91,36 +91,36 @@
     gap: 15px;
   }
 
-  .input-control-bar > button {
+  .control-bar > button {
     height: 100%;
     width: 100px;
     border-radius: 3px;
   }
 
-  .input-beautify-button {
+  .beautify-button {
     background-color: #f0f0f0;
     border: 1px solid #aaa;
   }
 
-  .input-beautify-button:hover {
+  .beautify-button:hover {
     background-color: #e5e5e5;
   }
 
-  .input-beautify-button:active {
+  .beautify-button:active {
     background-color: #dadada;
   }
 
-  .input-next-button {
+  .next-button {
     background-color: #2a60eb;
     color: white;
     border: none;
   }
 
-  .input-next-button:hover {
+  .next-button:hover {
     background-color: #254fb9;
   }
 
-  .input-next-button:active {
+  .next-button:active {
     background-color: #0f3fb8;
   }
 </style>

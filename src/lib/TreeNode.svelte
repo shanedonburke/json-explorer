@@ -60,14 +60,14 @@
       class:display-none={isExpanded || _.isEmpty(getObjectEntries(value))}
     />
     <span
-      class:tree-node-text-padded={_.isEmpty(getObjectEntries(value))}
-      class="tree-node-key-text">{key}</span
+      class:text-padded={_.isEmpty(getObjectEntries(value))}
+      class="key-text">{key}</span
     >
     {#if _.isEmpty(getObjectEntries(value))}
-      <span class="tree-node-value-text">{valueDisplayText}</span>
+      <span class="value-text">{valueDisplayText}</span>
     {/if}
   </div>
-  <div class="tree-node-children" class:display-none={!isExpanded}>
+  <div class="children" class:display-none={!isExpanded}>
     {#each getObjectEntries(value) as [childKey, childValue]}
       <TreeNode
         key={childKey}
@@ -91,12 +91,12 @@
     background-color: #00000008;
   }
 
-  .tree-node-key-text {
+  .key-text {
     overflow: visible;
     font-weight: 500;
   }
 
-  .tree-node-value-text {
+  .value-text {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -104,11 +104,11 @@
     opacity: 0.7;
   }
 
-  .tree-node-text-padded {
+  .text-padded {
     padding-left: 22px;
   }
 
-  .tree-node-children {
+  .children {
     margin-left: 10px;
     border-left: 1px solid #ccc;
   }

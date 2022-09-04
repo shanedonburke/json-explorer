@@ -34,7 +34,7 @@
       </button>
       <div class="navbar-btn-divider" />
       <button class:selected={currStep === 1} on:click={() => setCurrStep(1)}>
-        <span><b>Step 2: </b>Explore/Edit</span>
+        <span><b>Step 2: </b>Explore / Edit</span>
       </button>
       <div class="navbar-btn-divider" />
       <button class:selected={currStep === 2} on:click={() => setCurrStep(2)}>

@@ -49,8 +49,7 @@ export function pathArrayToString(pathArr: Array<string>): string {
 
 export function setEditorValue(editor: MonacoEditor, value: any) {
   if (value !== undefined) {
-    const newValue = _.isString(value) ? value : JSON.stringify(value, null, "\t");
-    editor?.getModel()?.setValue(newValue);
+    editor?.getModel()?.setValue(stringify(value));
   }
 }
 
@@ -82,4 +81,8 @@ export function revealTreeNode(modelPath: Array<string>) {
     expandPath(modelPath.slice(0, modelPath.length - 1));
   }
   document.getElementById(pathArrayToString(modelPath)).scrollIntoView();
+}
+
+export function stringify(val: any) {
+  return _.isString(val) ? val : JSON.stringify(val, null, "\t");
 }

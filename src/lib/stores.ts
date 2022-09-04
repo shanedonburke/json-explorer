@@ -1,5 +1,6 @@
 import { writable, type Writable } from "svelte/store";
 import _ from "lodash";
+import { stringify } from "./util";
 
 export const model: Writable<any> = writable();
 
@@ -8,16 +9,12 @@ export const activeModelPath: Writable<Array<string>> = writable([]);
 export const expandedModelPaths: Writable<Array<Array<string>>> = writable([]);
 
 export const inputJson: Writable<string> = writable(
-  JSON.stringify(
-    {
-      a: {
-        b: 1,
-        c: [0, { d: 2 }],
-      },
+  stringify({
+    a: {
+      b: 1,
+      c: [0, { d: 2 }],
     },
-    null,
-    "\t"
-  )
+  })
 );
 
 export function expandPath(path: Array<string>): void {

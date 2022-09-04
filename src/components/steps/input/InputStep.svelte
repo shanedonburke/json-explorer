@@ -5,7 +5,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { inputJson, model } from "../../../lib/stores";
   import type { MonacoEditor } from "../../../lib/types";
-  import { parseJsonString } from "../../../lib/util";
+  import { parseJsonString, stringify } from "../../../lib/util";
 
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;
@@ -27,16 +27,12 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: JSON.stringify(
-        {
-          a: {
-            b: 1,
-            c: [0, { d: 2 }],
-          },
+      value: stringify({
+        a: {
+          b: 1,
+          c: [0, { d: 2 }],
         },
-        null,
-        "\t"
-      ),
+      }),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,

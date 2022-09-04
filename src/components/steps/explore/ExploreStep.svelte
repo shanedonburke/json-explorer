@@ -16,6 +16,7 @@
     parseJsonString,
     pathArrayToString,
     revealTreeNode,
+stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "src/lib/types";
 
@@ -46,7 +47,7 @@
       if (activeModelValue !== undefined) {
         editor
           ?.getModel()
-          ?.setValue(JSON.stringify(activeModelValue, null, "\t"));
+          ?.setValue(stringify(activeModelValue));
       } else {
         // The current model path no longer exists due to model or input JSON changes
         if (!_.isEmpty(activeModelPathValue)) {
@@ -69,11 +70,11 @@
     activeModelPathValue = value;
     if (!_.isNil(editor?.getModel())) {
       if (_.isEmpty(value)) {
-        editor.getModel().setValue(JSON.stringify(modelValue, null, "\t"));
+        editor.getModel().setValue(stringify(modelValue));
       } else {
         editor
           .getModel()
-          .setValue(JSON.stringify(_.get(modelValue, value), null, "\t"));
+          .setValue(stringify(_.get(modelValue, value)));
       }
     }
   });
@@ -126,7 +127,7 @@
   function beautify() {
     const parsedEditorValue = parseJsonString(editor?.getModel()?.getValue());
     if (parsedEditorValue !== undefined) {
-      editor.getModel().setValue(JSON.stringify(parsedEditorValue, null, "\t"));
+      editor.getModel().setValue(stringify(parsedEditorValue));
     }
   }
 
@@ -143,7 +144,7 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: JSON.stringify(getActiveModelValue(), null, "\t"),
+      value: stringify(getActiveModelValue()),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,

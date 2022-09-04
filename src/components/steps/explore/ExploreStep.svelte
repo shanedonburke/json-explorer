@@ -1,17 +1,28 @@
 <script lang="ts">
   import _ from "lodash";
-  import type monaco from "monaco-editor";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
   import TreeNode from "./TreeNode.svelte";
   import Search from "./search/Search.svelte";
-  import { activeModelPath, collapsePath, expandPath, model } from "../../../lib/stores";
-  import { getAllPathValues, getValueInModelByPath, parseJsonString, pathArrayToString, revealTreeNode } from "../../../lib/util";
+  import {
+    activeModelPath,
+    collapsePath,
+    expandPath,
+    model,
+  } from "../../../lib/stores";
+  import {
+    getAllPathValues,
+    getValueInModelByPath,
+    parseJsonString,
+    pathArrayToString,
+    revealTreeNode,
+  } from "../../../lib/util";
+  import type { MonacoEditor } from "src/lib/types";
 
   let modelValue: any;
 
   let editorEl: HTMLDivElement = null;
-  let editor: monaco.editor.IStandaloneCodeEditor;
+  let editor: MonacoEditor;
   let Monaco: any;
 
   let activeModelPathValue: Array<string> = [];
@@ -33,7 +44,9 @@
     // Don't update editor if the new model value and the editor value are semantically equal
     if (!_.isEqual(editorValue, activeModelValue)) {
       if (activeModelValue !== undefined) {
-        editor?.getModel()?.setValue(JSON.stringify(activeModelValue, null, "\t"));
+        editor
+          ?.getModel()
+          ?.setValue(JSON.stringify(activeModelValue, null, "\t"));
       } else {
         // The current model path no longer exists due to model or input JSON changes
         if (!_.isEmpty(activeModelPathValue)) {
@@ -105,7 +118,7 @@
       expandPath(pv.path);
     }
   }
-  
+
   function collapseAllTreeNodes() {
     collapsePath([]);
   }
@@ -145,7 +158,7 @@
       if (_.isEqual(getActiveModelValue(), newValue)) return;
 
       if (_.isEmpty(activeModelPathValue)) {
-        model.update(() => newValue);        
+        model.update(() => newValue);
       } else {
         const newModel = _.cloneDeep(modelValue);
         _.set(newModel, activeModelPathValue, newValue);
@@ -192,11 +205,7 @@
         >
           <iconify-icon icon="fe:target" width="20" height="20" />
         </button>
-        <button
-          class="icon-button"
-          on:click={beautify}
-          title="Beautify"
-        >
+        <button class="icon-button" on:click={beautify} title="Beautify">
           <iconify-icon icon="gg:format-left" width="20" height="20" />
         </button>
         <span class="edit-path-text"

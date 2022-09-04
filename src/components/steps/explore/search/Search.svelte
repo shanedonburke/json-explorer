@@ -1,17 +1,16 @@
 <script lang="ts">
   import _ from "lodash";
-  import type monaco from "monaco-editor";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
   import { getAllPathValues, parseJsonString } from "../../../../lib/util";
   import SearchResult from "./SearchResult.svelte";
   import { model } from "../../../../lib/stores";
-import type { PathValuePair } from "../../../../lib/types";
+  import type { MonacoEditor, PathValuePair } from "../../../../lib/types";
 
   let modelValue: any;
 
   let editorEl: HTMLDivElement = null;
-  let editor: monaco.editor.IStandaloneCodeEditor;
+  let editor: MonacoEditor;
   let Monaco: any;
 
   let pathValues: Array<PathValuePair> = [];

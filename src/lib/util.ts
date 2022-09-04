@@ -1,4 +1,5 @@
 import _ from "lodash";
+import type { MonacoEditor } from "./types";
 
 export function parseJsonString(str: string): string | undefined {
   try {
@@ -43,4 +44,11 @@ export function pathArrayToString(pathArr: Array<string>): string {
   // }
   // return path;
   return pathArr.join(".");
+}
+
+export function setEditorValue(editor: MonacoEditor, value: any) {
+  if (value !== undefined) {
+    const newValue = _.isString(value) ? value : JSON.stringify(value, null, "\t");
+    editor?.getModel()?.setValue(newValue);
+  }
 }

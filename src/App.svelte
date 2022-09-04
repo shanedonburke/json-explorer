@@ -1,8 +1,8 @@
 <script lang="ts">
-  import _ from 'lodash';
+  import _ from "lodash";
   import InputStep from "./lib/InputStep.svelte";
   import ExploreStep from "./lib/ExploreStep.svelte";
-import { model } from './lib/stores';
+  import { inputJson, model } from "./lib/stores";
 
   function parseJsonString(str) {
     try {
@@ -16,24 +16,14 @@ import { model } from './lib/stores';
     currStep = clickedStep;
   }
 
-  function handleInputChange(event) {
-    inputJson = event.detail.value;
-
-    const newModel = parseJsonString(inputJson);
+  inputJson.subscribe((value) => {
+    const newModel = parseJsonString(value);
     if (newModel !== undefined && !_.isEqual(model, newModel)) {
-      model.update(() => newModel)
+      model.update(() => newModel);
     }
-  }
+  });
 
   let currStep = 0;
-  let inputJson = JSON.stringify({
-    a: {
-      b: 1,
-      c: [0, { d: 2 }]
-    }
-  }, null, "\t");
-
-  model.update(() => parseJsonString(inputJson));
 </script>
 
 <main>
@@ -52,11 +42,17 @@ import { model } from './lib/stores';
       </button>
     </div>
     <div style="width: 100%; height: 100%; overflow-x: hidden">
-      <div style="width: 100%; height: 100%" class:display-none={currStep !== 0}>
-        <InputStep {inputJson} on:inputChange={handleInputChange} on:nextStep={() => setCurrStep(1)} />
+      <div
+        style="width: 100%; height: 100%"
+        class:display-none={currStep !== 0}
+      >
+        <InputStep on:nextStep={() => setCurrStep(1)} />
       </div>
-      <div style="width: 100%; height: 100%" class:display-none={currStep !== 1}>
-        <ExploreStep {inputJson} />
+      <div
+        style="width: 100%; height: 100%"
+        class:display-none={currStep !== 1}
+      >
+        <ExploreStep />
       </div>
     </div>
   </div>

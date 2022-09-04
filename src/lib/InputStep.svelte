@@ -1,18 +1,21 @@
 <script lang="ts">
   import _ from "lodash";
 
-  import type monaco from "monaco-editor";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-  import { createEventDispatcher } from "svelte";
-  import { onMount } from "svelte";
-
-  const dispatch = createEventDispatcher();
-
-  export let inputJson: string;
+  import { createEventDispatcher, onMount } from "svelte";
+  import { inputJson, model } from "./stores";
+  import type { MonacoEditor } from "./types";
+  import { parseJsonString } from "./util";
 
   let editorEl: HTMLDivElement = null;
-  let editor: monaco.editor.IStandaloneCodeEditor;
+  let editor: MonacoEditor;
   let Monaco: any;
+
+  let modelValue: any = undefined;
+
+  model.subscribe((value) => (modelValue = value));
+
+  const dispatch = createEventDispatcher();
 
   onMount(async () => {
     // @ts-ignore
@@ -24,7 +27,16 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: inputJson,
+      value: JSON.stringify(
+        {
+          a: {
+            b: 1,
+            c: [0, { d: 2 }],
+          },
+        },
+        null,
+        "\t"
+      ),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -33,9 +45,14 @@
     });
 
     editor.getModel().onDidChangeContent(() => {
-      dispatch("inputChange", {
-        value: editor.getModel().getValue(),
-      });
+      const editorValue = editor.getModel().getValue();
+      const parsedEditorValue = parseJsonString(editorValue);
+      if (
+        parsedEditorValue !== undefined &&
+        !_.isEqual(parsedEditorValue, modelValue)
+      ) {
+        inputJson.update(() => editorValue);
+      }
     });
 
     return () => {
@@ -44,7 +61,7 @@
   });
 
   function beautify() {
-    editor.trigger("beautify", 'editor.action.formatDocument', null);
+    editor.trigger("beautify", "editor.action.formatDocument", null);
   }
 
   function goToNextStep() {

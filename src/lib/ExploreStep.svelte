@@ -5,10 +5,8 @@
   import { onMount } from "svelte";
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
-  import { editModelPath, expandPath, model } from "./stores";
+  import { collapsePath, editModelPath, expandPath, model } from "./stores";
   import { parseJsonString, pathArrayToString } from "./util";
-
-  export let inputJson: string;
 
   let modelValue: any;
 
@@ -30,8 +28,17 @@
     modelValue = value;
 
     const editorValue = parseJsonString(editor?.getModel()?.getValue());
+
+    // Don't update editor if the new model value and the editor value are semantically equal
     if (!_.isEqual(editorValue, value)) {
-      editor?.getModel()?.setValue(JSON.stringify(getEditValueFromModel(), null, "\t"));
+      const editValueFromModel = getEditValueFromModel();
+
+      // Can be undefined when changing input JSON
+      if (editValueFromModel !== undefined) {
+        editor?.getModel()?.setValue(JSON.stringify(editValueFromModel, null, "\t"));
+      } else {
+        collapsePath([]);
+      }
     }
   });
 

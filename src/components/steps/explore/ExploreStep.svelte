@@ -4,9 +4,9 @@
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
   import TreeNode from "./TreeNode.svelte";
-  import Search from "./Search.svelte";
-  import { activeModelPath, collapsePath, expandPath, model } from "./stores";
-  import { getAllPathValues, getValueInModelByPath, parseJsonString, pathArrayToString, revealTreeNode } from "./util";
+  import Search from "./search/Search.svelte";
+  import { activeModelPath, collapsePath, expandPath, model } from "../../../lib/stores";
+  import { getAllPathValues, getValueInModelByPath, parseJsonString, pathArrayToString, revealTreeNode } from "../../../lib/util";
 
   let modelValue: any;
 

@@ -1,8 +1,7 @@
 <script lang="ts">
   import _ from "lodash";
-  import { activeModelPath, expandPath } from "./stores";
-
-  import { pathArrayToString, revealTreeNode } from "./util";
+  import { activeModelPath } from "../../../../lib/stores";
+  import { pathArrayToString, revealTreeNode } from "../../../../lib/util";
 
   export let modelPath: Array<string>;
 

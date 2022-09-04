@@ -3,9 +3,9 @@
 
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { createEventDispatcher, onMount } from "svelte";
-  import { inputJson, model } from "./stores";
-  import type { MonacoEditor } from "./types";
-  import { parseJsonString } from "./util";
+  import { inputJson, model } from "../../../lib/stores";
+  import type { MonacoEditor } from "../../../lib/types";
+  import { parseJsonString } from "../../../lib/util";
 
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;

@@ -7,8 +7,8 @@
     activeModelPath,
     expandedModelPaths,
     expandPath,
-  } from "./stores";
-  import { getObjectEntries, pathArrayToString, valueToString } from "./util";
+  } from "../../../lib/stores";
+  import { getObjectEntries, pathArrayToString, valueToString } from "../../../lib/util";
 
   export let key: string;
   export let value: any;

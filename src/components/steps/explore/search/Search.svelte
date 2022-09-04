@@ -3,10 +3,10 @@
   import type monaco from "monaco-editor";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
-  import { getAllPathValues, parseJsonString } from "./util";
+  import { getAllPathValues, parseJsonString } from "../../../../lib/util";
   import SearchResult from "./SearchResult.svelte";
-  import { model } from "./stores";
-import type { PathValuePair } from "./types";
+  import { model } from "../../../../lib/stores";
+import type { PathValuePair } from "../../../../lib/types";
 
   let modelValue: any;
 

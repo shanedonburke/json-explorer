@@ -1,7 +1,7 @@
 <script lang="ts">
   import _ from "lodash";
-  import InputStep from "./lib/InputStep.svelte";
-  import ExploreStep from "./lib/ExploreStep.svelte";
+  import InputStep from "./components/steps/input/InputStep.svelte";
+  import ExploreStep from "./components/steps/explore/ExploreStep.svelte";
   import { inputJson, model } from "./lib/stores";
 
   function parseJsonString(str) {

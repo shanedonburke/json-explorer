@@ -8,7 +8,7 @@
     expandedModelPaths,
     expandPath,
   } from "./stores";
-  import { getObjectEntries, valueToString } from "./util";
+  import { getObjectEntries, pathArrayToString, valueToString } from "./util";
 
   export let key: string;
   export let value: any;
@@ -20,7 +20,7 @@
   $: valueDisplayText = `= ${valueToString(value)}`;
 
   activeModelPath.subscribe((value) => {
-    isEditing = _.isEqual(modelPath, value)
+    isEditing = _.isEqual(modelPath, value);
   });
 
   function expand(event: PointerEvent) {
@@ -49,7 +49,12 @@
 </script>
 
 <div>
-  <div class="tree-node" on:click={handleThisNodeClick} class:selected={isEditing}>
+  <div
+    class="tree-node"
+    id={pathArrayToString(modelPath)}
+    on:click={handleThisNodeClick}
+    class:selected={isEditing}
+  >
     <iconify-icon
       icon="bx:chevron-down"
       width="18"

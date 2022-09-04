@@ -5,8 +5,8 @@
   import { onMount } from "svelte";
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
-  import { activeModelPath, expandPath, model } from "./stores";
-  import { getValueInModelByPath, parseJsonString, pathArrayToString, revealTreeNode } from "./util";
+  import { activeModelPath, collapsePath, expandPath, model } from "./stores";
+  import { getAllPathValues, getValueInModelByPath, parseJsonString, pathArrayToString, revealTreeNode } from "./util";
 
   let modelValue: any;
 
@@ -100,6 +100,16 @@
     }
   }
 
+  function expandAllTreeNodes() {
+    for (const pv of getAllPathValues(modelValue)) {
+      expandPath(pv.path);
+    }
+  }
+  
+  function collapseAllTreeNodes() {
+    collapsePath([]);
+  }
+
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
 
@@ -145,13 +155,31 @@
 <div bind:this={containerEl} class="container">
   <div bind:this={editContainerEl} class="edit-container">
     <div bind:this={treeEl} class="tree">
-      <TreeNode key="Root" value={modelValue} modelPath={[]} />
+      <div class="tree-controls">
+        <button
+          class="icon-button"
+          on:click={expandAllTreeNodes}
+          title="Expand all"
+        >
+          <iconify-icon icon="bx:expand-vertical" width="20" height="20" />
+        </button>
+        <button
+          class="icon-button"
+          on:click={collapseAllTreeNodes}
+          title="Collapse all"
+        >
+          <iconify-icon icon="bx:collapse-vertical" width="20" height="20" />
+        </button>
+      </div>
+      <div class="tree-nodes">
+        <TreeNode key="Root" value={modelValue} modelPath={[]} />
+      </div>
     </div>
     <div class="splitter h-splitter" on:mousedown={handleHSplitterMouseDown} />
     <div class="monaco-editor-container">
-      <div class="edit-path">
+      <div class="editor-controls">
         <button
-          class="reveal-button"
+          class="icon-button"
           on:click={handleRevealButtonClick}
           title="Reveal in tree"
         >
@@ -192,8 +220,20 @@
   .tree {
     width: calc(50% - 8px);
     height: 100%;
-    overflow: auto;
+    overflow: hidden;
     user-select: none;
+  }
+
+  .tree-controls {
+    height: 24px;
+    display: flex;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .tree-nodes {
+    height: calc(100% - 24px);
+    overflow: auto;
   }
 
   .splitter {
@@ -226,7 +266,7 @@
     width: 100%;
   }
 
-  .edit-path {
+  .editor-controls {
     width: 100%;
     height: 24px;
     font-size: 14px;
@@ -241,7 +281,7 @@
     padding: 0 8px;
   }
 
-  .reveal-button {
+  .icon-button {
     width: 24px;
     height: 24px;
     display: flex;
@@ -252,7 +292,7 @@
     border-right: 1px solid #bbb;
   }
 
-  .reveal-button:hover {
+  .icon-button:hover {
     background-color: #00000010;
   }
 

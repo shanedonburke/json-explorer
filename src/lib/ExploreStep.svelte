@@ -55,7 +55,9 @@
   }
 
   function handleRevealButtonClick() {
-    expandPath(editModelPathValue);
+    if (editModelPathValue.length > 0) {
+      expandPath(editModelPathValue.slice(0, editModelPathValue.length - 1));
+    }
   }
 
   function handleHSplitterMouseDown() {

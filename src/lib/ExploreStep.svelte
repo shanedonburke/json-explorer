@@ -6,7 +6,7 @@
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
   import { collapsePath, editModelPath, expandPath, model } from "./stores";
-  import { parseJsonString, pathArrayToString } from "./util";
+  import { getValueInModelByPath, parseJsonString, pathArrayToString } from "./util";
 
   let modelValue: any;
 
@@ -33,11 +33,22 @@
     if (!_.isEqual(editorValue, value)) {
       const editValueFromModel = getEditValueFromModel();
 
-      // Can be undefined when changing input JSON
       if (editValueFromModel !== undefined) {
         editor?.getModel()?.setValue(JSON.stringify(editValueFromModel, null, "\t"));
       } else {
-        collapsePath([]);
+        // The current model path no longer exists
+        if (_.isEmpty(editModelPathValue)) {
+          collapsePath([]);
+        } else {
+          let pathToCheck = _.cloneDeep(editModelPathValue);
+          while (!_.isEmpty(pathToCheck)) {
+            pathToCheck = pathToCheck.slice(0, pathToCheck.length - 1);
+            if (getValueInModelByPath(modelValue, pathToCheck) !== undefined) {
+              editModelPath.update(() => pathToCheck);
+              break;
+            }
+          }
+        }
       }
     }
   });
@@ -56,9 +67,7 @@
   });
 
   function getEditValueFromModel(): any {
-    return _.isEmpty(editModelPathValue)
-        ? modelValue
-        : _.get(modelValue, editModelPathValue);
+    return getValueInModelByPath(modelValue, editModelPathValue);
   }
 
   function handleRevealButtonClick() {

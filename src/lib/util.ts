@@ -52,3 +52,9 @@ export function setEditorValue(editor: MonacoEditor, value: any) {
     editor?.getModel()?.setValue(newValue);
   }
 }
+
+export function getValueInModelByPath(modelValue: any, path: Array<string>): any {
+  return _.isEmpty(path)
+    ? modelValue
+    : _.get(modelValue, path);
+}

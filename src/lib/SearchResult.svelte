@@ -2,14 +2,14 @@
   import _ from "lodash";
   import { activeModelPath, expandPath } from "./stores";
 
-  import { pathArrayToString } from "./util";
+  import { pathArrayToString, revealTreeNode } from "./util";
 
   export let modelPath: Array<string>;
 
   let isEditing = false;
 
   function handleClick() {
-    expandPath(modelPath);
+    revealTreeNode(modelPath);
     activeModelPath.update(() => modelPath);
   }
 

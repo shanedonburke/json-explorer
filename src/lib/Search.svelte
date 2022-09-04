@@ -3,14 +3,10 @@
   import type monaco from "monaco-editor";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
-  import { getObjectEntries, parseJsonString } from "./util";
+  import { getAllPathValues, parseJsonString } from "./util";
   import SearchResult from "./SearchResult.svelte";
-import { model } from "./stores";
-
-  interface PathValuePair {
-    path: Array<string>;
-    value: any;
-  }
+  import { model } from "./stores";
+import type { PathValuePair } from "./types";
 
   let modelValue: any;
 
@@ -26,9 +22,9 @@ import { model } from "./stores";
 
   let isSplitterMouseDown = false;
 
-  $: modelValue, (pathValues = getAllPathValues());
+  $: modelValue, (pathValues = getAllPathValues(modelValue));
 
-  model.subscribe((value) => modelValue = value);
+  model.subscribe((value) => (modelValue = value));
 
   function handleSplitterMouseDown() {
     isSplitterMouseDown = true;
@@ -94,22 +90,6 @@ import { model } from "./stores";
       editor.dispose();
     };
   });
-
-  function getAllPathValues(): Array<PathValuePair> {
-    const pvs: Array<PathValuePair> = [];
-    const stack: Array<Array<string>> = [[]];
-
-    while (stack.length > 0) {
-      const path = stack.pop();
-      const value = _.isEmpty(path) ? modelValue : _.get(modelValue, path);
-      pvs.push({ path, value });
-
-      for (const entry of getObjectEntries(value)) {
-        stack.push([...path, entry[0]]);
-      }
-    }
-    return pvs;
-  }
 </script>
 
 <div bind:this={containerEl} class="container">

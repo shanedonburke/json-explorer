@@ -6,7 +6,7 @@
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
   import { activeModelPath, expandPath, model } from "./stores";
-  import { getValueInModelByPath, parseJsonString, pathArrayToString } from "./util";
+  import { getValueInModelByPath, parseJsonString, pathArrayToString, revealTreeNode } from "./util";
 
   let modelValue: any;
 
@@ -70,11 +70,7 @@
   }
 
   function handleRevealButtonClick() {
-    if (activeModelPathValue.length > 0) {
-      // Expand all paths but the one being revealed
-      expandPath(activeModelPathValue.slice(0, activeModelPathValue.length - 1));
-      document.getElementById(pathArrayToString(activeModelPathValue)).scrollIntoView();
-    }
+    revealTreeNode(activeModelPathValue);
   }
 
   function handleHSplitterMouseDown() {

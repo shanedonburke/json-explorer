@@ -28,18 +28,17 @@
     modelValue = value;
 
     const editorValue = parseJsonString(editor?.getModel()?.getValue());
+    const editValueFromModel = getEditValueFromModel();
 
     // Don't update editor if the new model value and the editor value are semantically equal
-    if (!_.isEqual(editorValue, value)) {
-      const editValueFromModel = getEditValueFromModel();
+    if (!_.isEqual(editorValue, editValueFromModel)) {
 
       if (editValueFromModel !== undefined) {
         editor?.getModel()?.setValue(JSON.stringify(editValueFromModel, null, "\t"));
       } else {
-        // The current model path no longer exists
-        if (_.isEmpty(editModelPathValue)) {
-          collapsePath([]);
-        } else {
+        // The current model path no longer exists due to model or input JSON changes
+        if (!_.isEmpty(editModelPathValue)) {
+          // Change current model path to the closest parent that still exists
           let pathToCheck = _.cloneDeep(editModelPathValue);
           while (!_.isEmpty(pathToCheck)) {
             pathToCheck = pathToCheck.slice(0, pathToCheck.length - 1);

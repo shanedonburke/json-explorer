@@ -110,6 +110,13 @@
     collapsePath([]);
   }
 
+  function beautify() {
+    const parsedEditorValue = parseJsonString(editor?.getModel()?.getValue());
+    if (parsedEditorValue !== undefined) {
+      editor.getModel().setValue(JSON.stringify(parsedEditorValue, null, "\t"));
+    }
+  }
+
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
 
@@ -184,6 +191,13 @@
           title="Reveal in tree"
         >
           <iconify-icon icon="fe:target" width="20" height="20" />
+        </button>
+        <button
+          class="icon-button"
+          on:click={beautify}
+          title="Beautify"
+        >
+          <iconify-icon icon="gg:format-left" width="20" height="20" />
         </button>
         <span class="edit-path-text"
           >{pathArrayToString(activeModelPathValue)}</span
@@ -279,6 +293,7 @@
 
   .edit-path-text {
     padding: 0 8px;
+    font-weight: 500;
   }
 
   .icon-button {

@@ -4,7 +4,7 @@
   import "iconify-icon";
   import {
     collapsePath,
-    editModelPath,
+    activeModelPath,
     expandedModelPaths,
     expandPath,
   } from "./stores";
@@ -19,7 +19,7 @@
 
   $: valueDisplayText = `= ${valueToString(value)}`;
 
-  editModelPath.subscribe((value) => {
+  activeModelPath.subscribe((value) => {
     isEditing = _.isEqual(modelPath, value)
   });
 
@@ -34,7 +34,7 @@
   }
 
   function handleThisNodeClick() {
-    editModelPath.update(() => modelPath);
+    activeModelPath.update(() => modelPath);
   }
 
   expandedModelPaths.subscribe((value) => {

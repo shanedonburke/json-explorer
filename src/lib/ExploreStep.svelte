@@ -5,7 +5,7 @@
   import { onMount } from "svelte";
   import TreeNode from "./TreeNode.svelte";
   import Search from "./Search.svelte";
-  import { collapsePath, editModelPath, expandPath, model } from "./stores";
+  import { activeModelPath, expandPath, model } from "./stores";
   import { getValueInModelByPath, parseJsonString, pathArrayToString } from "./util";
 
   let modelValue: any;
@@ -14,7 +14,7 @@
   let editor: monaco.editor.IStandaloneCodeEditor;
   let Monaco: any;
 
-  let editModelPathValue: Array<string> = [];
+  let activeModelPathValue: Array<string> = [];
 
   let containerEl: HTMLDivElement = null;
   let editContainerEl: HTMLDivElement = null;
@@ -28,22 +28,22 @@
     modelValue = value;
 
     const editorValue = parseJsonString(editor?.getModel()?.getValue());
-    const editValueFromModel = getEditValueFromModel();
+    const activeModelValue = getActiveModelValue();
 
     // Don't update editor if the new model value and the editor value are semantically equal
-    if (!_.isEqual(editorValue, editValueFromModel)) {
-
-      if (editValueFromModel !== undefined) {
-        editor?.getModel()?.setValue(JSON.stringify(editValueFromModel, null, "\t"));
+    if (!_.isEqual(editorValue, activeModelValue)) {
+      if (activeModelValue !== undefined) {
+        editor?.getModel()?.setValue(JSON.stringify(activeModelValue, null, "\t"));
       } else {
         // The current model path no longer exists due to model or input JSON changes
-        if (!_.isEmpty(editModelPathValue)) {
+        if (!_.isEmpty(activeModelPathValue)) {
           // Change current model path to the closest parent that still exists
-          let pathToCheck = _.cloneDeep(editModelPathValue);
+          let pathToCheck = _.cloneDeep(activeModelPathValue);
+
           while (!_.isEmpty(pathToCheck)) {
             pathToCheck = pathToCheck.slice(0, pathToCheck.length - 1);
             if (getValueInModelByPath(modelValue, pathToCheck) !== undefined) {
-              editModelPath.update(() => pathToCheck);
+              activeModelPath.update(() => pathToCheck);
               break;
             }
           }
@@ -52,8 +52,8 @@
     }
   });
 
-  editModelPath.subscribe((value) => {
-    editModelPathValue = value;
+  activeModelPath.subscribe((value) => {
+    activeModelPathValue = value;
     if (!_.isNil(editor?.getModel())) {
       if (_.isEmpty(value)) {
         editor.getModel().setValue(JSON.stringify(modelValue, null, "\t"));
@@ -65,13 +65,13 @@
     }
   });
 
-  function getEditValueFromModel(): any {
-    return getValueInModelByPath(modelValue, editModelPathValue);
+  function getActiveModelValue(): any {
+    return getValueInModelByPath(modelValue, activeModelPathValue);
   }
 
   function handleRevealButtonClick() {
-    if (editModelPathValue.length > 0) {
-      expandPath(editModelPathValue.slice(0, editModelPathValue.length - 1));
+    if (activeModelPathValue.length > 0) {
+      expandPath(activeModelPathValue.slice(0, activeModelPathValue.length - 1));
     }
   }
 
@@ -115,7 +115,7 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: JSON.stringify(getEditValueFromModel(), null, "\t"),
+      value: JSON.stringify(getActiveModelValue(), null, "\t"),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -127,13 +127,13 @@
       const newValue = parseJsonString(editor.getModel().getValue());
 
       if (newValue === undefined) return;
-      if (_.isEqual(getEditValueFromModel(), newValue)) return;
+      if (_.isEqual(getActiveModelValue(), newValue)) return;
 
-      if (_.isEmpty(editModelPathValue)) {
+      if (_.isEmpty(activeModelPathValue)) {
         model.update(() => newValue);        
       } else {
         const newModel = _.cloneDeep(modelValue);
-        _.set(newModel, editModelPathValue, newValue);
+        _.set(newModel, activeModelPathValue, newValue);
         model.update(() => newModel);
       }
     });
@@ -160,7 +160,7 @@
           <iconify-icon icon="fe:target" width="20" height="20" />
         </button>
         <span class="edit-path-text"
-          >{pathArrayToString(editModelPathValue)}</span
+          >{pathArrayToString(activeModelPathValue)}</span
         >
       </div>
       <div bind:this={editorEl} class="monaco-editor" />

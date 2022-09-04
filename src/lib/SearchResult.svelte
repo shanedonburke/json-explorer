@@ -1,6 +1,6 @@
 <script lang="ts">
   import _ from "lodash";
-  import { editModelPath, expandPath } from "./stores";
+  import { activeModelPath, expandPath } from "./stores";
 
   import { pathArrayToString } from "./util";
 
@@ -10,10 +10,10 @@
 
   function handleClick() {
     expandPath(modelPath);
-    editModelPath.update(() => modelPath);
+    activeModelPath.update(() => modelPath);
   }
 
-  editModelPath.subscribe((value) => {
+  activeModelPath.subscribe((value) => {
     isEditing = _.isEqual(modelPath, value);
   });
 </script>

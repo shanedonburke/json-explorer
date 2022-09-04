@@ -89,6 +89,10 @@
     align-items: center;
   }
 
+  .navbar > button:hover {
+    background-color: #eaeaea;
+  }
+
   .navbar > button.selected {
     background-color: #e5e5e5;
   }

@@ -20,7 +20,6 @@
     stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "../../../lib/types";
-  import Toast from "../../Toast.svelte";
 
   let modelValue: any;
 
@@ -91,6 +90,7 @@
   function resetActiveModel() {
     const newModel = _.cloneDeep(modelValue);
     const activeInputJson = _.get(parseJsonString(inputJsonValue), activeModelPathValue);
+    console.log(activeModelPathValue, activeInputJson);
     if (activeInputJson !== undefined) {
       _.set(newModel, activeModelPathValue, activeInputJson);
       model.update(() => newModel);

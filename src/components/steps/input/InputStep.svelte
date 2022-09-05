@@ -30,6 +30,8 @@
 
     const localStorageValue = localStorage.getItem(INPUT_JSON_STORAGE_KEY);
     if (localStorageValue !== null) {
+      inputJson.update(() => localStorageValue);
+
       setTimeout(() => {
         shouldShowLoadedToast = true;
         setTimeout(() => {

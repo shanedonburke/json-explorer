@@ -8,6 +8,7 @@
     activeModelPath,
     collapsePath,
     expandPath,
+    inputJson,
     model,
   } from "../../../lib/stores";
   import {
@@ -18,7 +19,7 @@
     revealTreeNode,
     stringify,
   } from "../../../lib/util";
-  import type { MonacoEditor } from "src/lib/types";
+  import type { MonacoEditor } from "../../../lib/types";
 
   let modelValue: any;
 
@@ -27,6 +28,7 @@
   let Monaco: any;
 
   let activeModelPathValue: Array<string> = [];
+  let inputJsonValue = "";
 
   let containerEl: HTMLDivElement = null;
   let editContainerEl: HTMLDivElement = null;
@@ -85,8 +87,19 @@
     editor.trigger("beautify", "editor.action.formatDocument", null);
   }
 
+  function resetActiveModel() {
+    const newModel = _.cloneDeep(modelValue);
+    const activeInputJson = _.get(parseJsonString(inputJsonValue), activeModelPathValue);
+    if (activeInputJson !== undefined) {
+      _.set(newModel, activeModelPathValue, activeInputJson);
+      model.update(() => newModel);
+    }
+  }
+
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
+
+  inputJson.subscribe((value) => inputJsonValue = value);
 
   model.subscribe((value) => {
     modelValue = value;
@@ -193,18 +206,30 @@
     <div class="monaco-editor-container">
       <div class="editor-controls">
         <button
-          class="icon-button"
+          class="icon-button icon-button-left"
           on:click={handleRevealButtonClick}
           title="Reveal in tree"
         >
           <iconify-icon icon="fe:target" width="20" height="20" />
         </button>
-        <button class="icon-button" on:click={beautify} title="Beautify">
+        <button
+          class="icon-button icon-button-left"
+          on:click={beautify}
+          title="Beautify"
+        >
           <iconify-icon icon="gg:format-left" width="20" height="20" />
         </button>
         <span class="edit-path-text"
           >{pathArrayToString(activeModelPathValue)}</span
         >
+        <div class="spacer" />
+        <button
+          class="icon-button icon-button-right"
+          on:click={resetActiveModel}
+          title="Reset"
+        >
+          <iconify-icon icon="ic:outline-clear" width="20" height="20" />
+        </button>
       </div>
       <div bind:this={editorEl} class="monaco-editor" />
     </div>
@@ -307,11 +332,24 @@
     align-items: center;
     border: none;
     background-color: transparent;
-    border-right: 1px solid #bbb;
   }
 
   .icon-button:hover {
     background-color: #00000010;
+  }
+
+  .icon-button-left {
+    border-right: 1px solid #bbb;
+  }
+
+  .icon-button-right {
+    border-left: 1px solid #bbb;
+  }
+
+  .spacer {
+    width: auto;
+    height: 100%;
+    flex-grow: 1;
   }
 
   .search-container {

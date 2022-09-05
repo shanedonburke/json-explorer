@@ -1,7 +1,7 @@
 <script lang="ts">
   import _ from "lodash";
-
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+  import { INPUT_JSON_STORAGE_KEY, SAMPLE_JSON } from "../../../lib/constants";
   import { createEventDispatcher, onMount } from "svelte";
   import { inputJson, model } from "../../../lib/stores";
   import type { MonacoEditor } from "../../../lib/types";
@@ -11,7 +11,7 @@
   let editor: MonacoEditor;
   let Monaco: any;
 
-  let modelValue: any = undefined;
+  let modelValue: any;
 
   model.subscribe((value) => (modelValue = value));
 
@@ -27,12 +27,7 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: stringify({
-        a: {
-          b: 1,
-          c: [0, { d: 2 }],
-        },
-      }),
+      value: localStorage.getItem(INPUT_JSON_STORAGE_KEY) ?? stringify(SAMPLE_JSON),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -48,6 +43,7 @@
         !_.isEqual(parsedEditorValue, modelValue)
       ) {
         inputJson.update(() => editorValue);
+        localStorage.setItem(INPUT_JSON_STORAGE_KEY, editorValue);
       }
     });
 
@@ -92,7 +88,7 @@
 
   .monaco-editor {
     width: 100%;
-    height: calc(100% - 100px);
+    height: 100%;
   }
 
   .control-bar {

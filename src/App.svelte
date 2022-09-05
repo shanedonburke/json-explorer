@@ -3,6 +3,7 @@
   import InputStep from "./components/steps/input/InputStep.svelte";
   import ExploreStep from "./components/steps/explore/ExploreStep.svelte";
   import { inputJson, model } from "./lib/stores";
+  import ExportStep from "./components/steps/export/ExportStep.svelte";
 
   function parseJsonString(str) {
     try {
@@ -54,6 +55,12 @@
       >
         <ExploreStep />
       </div>
+      <div
+        style="width: 100%; height: 100%"
+        class:display-none={currStep !== 2}
+      >
+        <ExportStep />
+      </div>
     </div>
   </div>
 </main>
@@ -98,8 +105,8 @@
   }
 
   .navbar-btn-divider {
-    width: 1px;
+    min-width: 1px;
     height: 100%;
-    background-color: #dfdfdf;
+    background-color: #d5d5d5;
   }
 </style>

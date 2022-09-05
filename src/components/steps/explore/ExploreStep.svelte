@@ -16,7 +16,7 @@
     parseJsonString,
     pathArrayToString,
     revealTreeNode,
-stringify,
+    stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "src/lib/types";
 
@@ -35,49 +35,6 @@ stringify,
 
   let isHSplitterMouseDown = false;
   let isVSplitterMouseDown = false;
-
-  model.subscribe((value) => {
-    modelValue = value;
-
-    const editorValue = parseJsonString(editor?.getModel()?.getValue());
-    const activeModelValue = getActiveModelValue();
-
-    // Don't update editor if the new model value and the editor value are semantically equal
-    if (!_.isEqual(editorValue, activeModelValue)) {
-      if (activeModelValue !== undefined) {
-        editor
-          ?.getModel()
-          ?.setValue(stringify(activeModelValue));
-      } else {
-        // The current model path no longer exists due to model or input JSON changes
-        if (!_.isEmpty(activeModelPathValue)) {
-          // Change current model path to the closest parent that still exists
-          let pathToCheck = _.cloneDeep(activeModelPathValue);
-
-          while (!_.isEmpty(pathToCheck)) {
-            pathToCheck = pathToCheck.slice(0, pathToCheck.length - 1);
-            if (getValueInModelByPath(modelValue, pathToCheck) !== undefined) {
-              activeModelPath.update(() => pathToCheck);
-              break;
-            }
-          }
-        }
-      }
-    }
-  });
-
-  activeModelPath.subscribe((value) => {
-    activeModelPathValue = value;
-    if (!_.isNil(editor?.getModel())) {
-      if (_.isEmpty(value)) {
-        editor.getModel().setValue(stringify(modelValue));
-      } else {
-        editor
-          .getModel()
-          .setValue(stringify(_.get(modelValue, value)));
-      }
-    }
-  });
 
   function getActiveModelValue(): any {
     return getValueInModelByPath(modelValue, activeModelPathValue);
@@ -125,14 +82,50 @@ stringify,
   }
 
   function beautify() {
-    const parsedEditorValue = parseJsonString(editor?.getModel()?.getValue());
-    if (parsedEditorValue !== undefined) {
-      editor.getModel().setValue(stringify(parsedEditorValue));
-    }
+    editor.trigger("beautify", "editor.action.formatDocument", null);
   }
 
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
+
+  model.subscribe((value) => {
+    modelValue = value;
+
+    const editorValue = parseJsonString(editor?.getModel()?.getValue());
+    const activeModelValue = getActiveModelValue();
+
+    // Don't update editor if the new model value and the editor value are semantically equal
+    if (!_.isEqual(editorValue, activeModelValue)) {
+      if (activeModelValue !== undefined) {
+        editor?.getModel()?.setValue(stringify(activeModelValue));
+      } else {
+        // The current model path no longer exists due to model or input JSON changes
+        if (!_.isEmpty(activeModelPathValue)) {
+          // Change current model path to the closest parent that still exists
+          let pathToCheck = _.cloneDeep(activeModelPathValue);
+
+          while (!_.isEmpty(pathToCheck)) {
+            pathToCheck = pathToCheck.slice(0, pathToCheck.length - 1);
+            if (getValueInModelByPath(modelValue, pathToCheck) !== undefined) {
+              activeModelPath.update(() => pathToCheck);
+              break;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  activeModelPath.subscribe((value) => {
+    activeModelPathValue = value;
+    if (!_.isNil(editor?.getModel())) {
+      if (_.isEmpty(value)) {
+        editor.getModel().setValue(stringify(modelValue));
+      } else {
+        editor.getModel().setValue(stringify(_.get(modelValue, value)));
+      }
+    }
+  });
 
   onMount(async () => {
     // @ts-ignore

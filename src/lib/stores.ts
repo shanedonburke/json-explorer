@@ -1,21 +1,15 @@
 import { writable, type Writable } from "svelte/store";
 import _ from "lodash";
 import { stringify } from "./util";
+import { SAMPLE_JSON } from "./constants";
 
-export const model: Writable<any> = writable();
+export const model: Writable<any> = writable(SAMPLE_JSON);
 
 export const activeModelPath: Writable<Array<string>> = writable([]);
 
 export const expandedModelPaths: Writable<Array<Array<string>>> = writable([]);
 
-export const inputJson: Writable<string> = writable(
-  stringify({
-    a: {
-      b: 1,
-      c: [0, { d: 2 }],
-    },
-  })
-);
+export const inputJson: Writable<string> = writable(stringify(SAMPLE_JSON));
 
 export function expandPath(path: Array<string>): void {
   const pathsToAdd: Array<Array<string>> = [[]];

@@ -3,10 +3,18 @@
   export let backgroundColor: string;
   export let shouldShow = false;
 
-  $: hasBeenShown = shouldShow ? true : hasBeenShown;
+  let isVisible = false;
+
+  $: {
+    if (shouldShow) {
+      isVisible = true;
+    } else {
+      setTimeout(() => isVisible = false, 500);
+    }
+  }
 </script>
 
-<div class="container" class:toast-enter={shouldShow} class:toast-exit={!shouldShow && hasBeenShown}>
+<div class="container" class:toast-enter={shouldShow} class:toast-exit={!shouldShow && isVisible}>
   <div class="toast" style:background={backgroundColor}>
     <span>{text}</span>
   </div>
@@ -23,6 +31,7 @@
     height: 32px;
     z-index: 10;
     top: -32px;
+    pointer-events: none;
   }
 
   .toast {

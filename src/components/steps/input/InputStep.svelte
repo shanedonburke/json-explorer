@@ -75,7 +75,7 @@
 </script>
 
 <div class="container">
-  <Toast text="Loaded from last session" backgroundColor="#33dd80" shouldShow={shouldShowLoadedToast} />
+  <Toast text="Loaded from last session" backgroundColor="#24bf58" shouldShow={shouldShowLoadedToast} />
   <div style="width: 100%; height: 100%">
     <div bind:this={editorEl} class="monaco-editor" />
   </div>

@@ -1,7 +1,7 @@
-var ghpages = require('gh-pages');
+import ghpages from 'gh-pages';
 
 ghpages.publish(
-    'public', // path to public directory
+    'public',
     {
         branch: 'gh-pages',
         repo: 'https://github.com/shanedonburke/json-explorer.git',

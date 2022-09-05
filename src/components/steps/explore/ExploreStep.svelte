@@ -20,6 +20,7 @@
     stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "../../../lib/types";
+import Toast from "../../Toast.svelte";
 
   let modelValue: any;
 
@@ -37,6 +38,9 @@
 
   let isHSplitterMouseDown = false;
   let isVSplitterMouseDown = false;
+
+  let shouldShowResetToast = false;
+  let resetToastTimeout: number;
 
   function getActiveModelValue(): any {
     return getValueInModelByPath(modelValue, activeModelPathValue);
@@ -90,10 +94,14 @@
   function resetActiveModel() {
     const newModel = _.cloneDeep(modelValue);
     const activeInputJson = _.get(parseJsonString(inputJsonValue), activeModelPathValue);
-    console.log(activeModelPathValue, activeInputJson);
+
     if (activeInputJson !== undefined) {
       _.set(newModel, activeModelPathValue, activeInputJson);
       model.update(() => newModel);
+    } else {
+      shouldShowResetToast = true;
+      clearTimeout(resetToastTimeout);
+      resetToastTimeout = setTimeout(() => shouldShowResetToast = false, 3000);
     }
   }
 
@@ -181,6 +189,7 @@
 </script>
 
 <div bind:this={containerEl} class="container">
+  <Toast text="Property doesn't exist in the input JSON" backgroundColor="#d12424" shouldShow={shouldShowResetToast} />
   <div bind:this={editContainerEl} class="edit-container">
     <div bind:this={treeEl} class="tree">
       <div class="tree-controls">

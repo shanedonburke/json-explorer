@@ -69,5 +69,5 @@ export function revealTreeNode(modelPath: Array<string>) {
 }
 
 export function stringify(val: any) {
-  return _.isString(val) ? val : JSON.stringify(val, null, "\t");
+  return JSON.stringify(val, null, "\t");
 }

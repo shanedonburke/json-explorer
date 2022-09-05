@@ -19,8 +19,8 @@
   });
 
   function copyToClipboard() {
-    const editorValue = stringify(editor?.getModel()?.getValue());
-    if (editorValue !== undefined) {
+    const editorValue = editor?.getModel()?.getValue();
+    if (editorValue) {
       navigator.clipboard.writeText(editorValue);
     }
   }
@@ -44,7 +44,7 @@
 
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: stringify(SAMPLE_JSON),
+      value: stringify(modelValue) ?? stringify(SAMPLE_JSON),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,

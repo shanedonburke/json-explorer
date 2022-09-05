@@ -39,7 +39,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    width: 200px;
+    padding: 0 15px;
     height: 100%;
     color: white;
     font-size: 15px;

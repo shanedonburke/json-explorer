@@ -6,12 +6,15 @@
   import { inputJson, model } from "../../../lib/stores";
   import type { MonacoEditor } from "../../../lib/types";
   import { parseJsonString, stringify } from "../../../lib/util";
+  import Toast from "../../Toast.svelte";
 
-  let editorEl: HTMLDivElement = null;
+  let editorEl: HTMLDivElement;
   let editor: MonacoEditor;
   let Monaco: any;
 
   let modelValue: any;
+
+  let shouldShowLoadedToast = false;
 
   model.subscribe((value) => (modelValue = value));
 
@@ -25,9 +28,19 @@
       },
     };
 
+    const localStorageValue = localStorage.getItem(INPUT_JSON_STORAGE_KEY);
+    if (localStorageValue !== null) {
+      setTimeout(() => {
+        shouldShowLoadedToast = true;
+        setTimeout(() => {
+          shouldShowLoadedToast = false;
+        }, 3000);
+      }, 1000);
+    }
+
     Monaco = await import("monaco-editor");
     editor = Monaco.editor.create(editorEl, {
-      value: localStorage.getItem(INPUT_JSON_STORAGE_KEY) ?? stringify(SAMPLE_JSON),
+      value: localStorageValue ?? stringify(SAMPLE_JSON),
       language: "json",
       automaticLayout: true,
       scrollBeyondLastLine: false,
@@ -62,6 +75,7 @@
 </script>
 
 <div class="container">
+  <Toast text="Loaded from last session" backgroundColor="#33dd80" shouldShow={shouldShowLoadedToast} />
   <div style="width: 100%; height: 100%">
     <div bind:this={editorEl} class="monaco-editor" />
   </div>

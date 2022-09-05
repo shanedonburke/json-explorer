@@ -20,6 +20,7 @@
     stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "../../../lib/types";
+  import Toast from "../../Toast.svelte";
 
   let modelValue: any;
 

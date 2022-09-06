@@ -194,14 +194,14 @@ import Toast from "../../Toast.svelte";
     <div bind:this={treeEl} class="tree">
       <div class="tree-controls">
         <button
-          class="icon-button"
+          class="icon-btn"
           on:click={expandAllTreeNodes}
           title="Expand all"
         >
           <iconify-icon icon="bx:expand-vertical" width="20" height="20" />
         </button>
         <button
-          class="icon-button"
+          class="icon-btn"
           on:click={collapseAllTreeNodes}
           title="Collapse all"
         >
@@ -216,14 +216,14 @@ import Toast from "../../Toast.svelte";
     <div class="monaco-editor-container">
       <div class="editor-controls">
         <button
-          class="icon-button icon-button-left"
+          class="icon-btn icon-btn-left"
           on:click={handleRevealButtonClick}
           title="Reveal in tree"
         >
           <iconify-icon icon="fe:target" width="20" height="20" />
         </button>
         <button
-          class="icon-button icon-button-left"
+          class="icon-btn icon-btn-left"
           on:click={beautify}
           title="Beautify"
         >
@@ -234,7 +234,7 @@ import Toast from "../../Toast.svelte";
         >
         <div class="spacer" />
         <button
-          class="icon-button icon-button-right"
+          class="icon-btn icon-btn-right"
           on:click={resetActiveModel}
           title="Reset"
         >
@@ -334,7 +334,7 @@ import Toast from "../../Toast.svelte";
     font-weight: 500;
   }
 
-  .icon-button {
+  .icon-btn {
     width: 24px;
     height: 24px;
     display: flex;
@@ -344,15 +344,15 @@ import Toast from "../../Toast.svelte";
     background-color: transparent;
   }
 
-  .icon-button:hover {
+  .icon-btn:hover {
     background-color: #00000010;
   }
 
-  .icon-button-left {
+  .icon-btn-left {
     border-right: 1px solid #bbb;
   }
 
-  .icon-button-right {
+  .icon-btn-right {
     border-left: 1px solid #bbb;
   }
 

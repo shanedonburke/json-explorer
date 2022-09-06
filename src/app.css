@@ -22,3 +22,38 @@ body {
 .display-none {
   display: none;
 }
+
+.text-btn {
+  height: 100%;
+  width: 150px;
+  height: 32px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.primary-btn {
+  background-color: #2a60eb;
+  color: white;
+  border: none;
+}
+
+.primary-btn:hover {
+  background-color: #254fb9;
+}
+
+.primary-btn:active {
+  background-color: #0f3fb8;
+}
+
+.secondary-btn {
+  background-color: #f0f0f0;
+  border: 1px solid #aaa;
+}
+
+.secondary-btn:hover {
+  background-color: #e5e5e5;
+}
+
+.secondary-btn:active {
+  background-color: #dadada;
+}

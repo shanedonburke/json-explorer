@@ -64,8 +64,8 @@
     <div bind:this={editorEl} class="monaco-editor" />
   </div>
   <div class="controls">
-    <button class="button primary-button" on:click={copyToClipboard}>Copy to clipboard</button>
-    <button class="button primary-button" on:click={saveFile}>Save file</button>
+    <button class="export-step-btn text-btn primary-btn" on:click={copyToClipboard}>Copy to clipboard</button>
+    <button class="export-step-btn text-btn primary-btn" on:click={saveFile}>Save file</button>
   </div>
 </div>
 
@@ -94,25 +94,7 @@
     background-color: #f8f8f8;
   }
 
-  .button {
-    height: 30px;
-    width: 150px;
+  .export-step-btn {
     margin: 20px 20px 0 20px;
-    border-radius: 3px;
-    white-space: nowrap;
-  }
-
-  .primary-button {
-    background-color: #2a60eb;
-    color: white;
-    border: none;
-  }
-
-  .primary-button:hover {
-    background-color: #254fb9;
-  }
-
-  .primary-button:active {
-    background-color: #0f3fb8;
   }
 </style>

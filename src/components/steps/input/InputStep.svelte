@@ -82,10 +82,10 @@
     <div bind:this={editorEl} class="monaco-editor" />
   </div>
   <div class="control-bar">
-    <button class="beautify-button" on:click={beautify}>
+    <button class="text-btn secondary-btn" on:click={beautify}>
       <span>Beautify</span>
     </button>
-    <button class="next-button" on:click={goToNextStep}>
+    <button class="text-btn primary-btn" on:click={goToNextStep}>
       <span>Next</span>
     </button>
   </div>
@@ -115,38 +115,5 @@
     display: flex;
     justify-content: flex-end;
     gap: 15px;
-  }
-
-  .control-bar > button {
-    height: 100%;
-    width: 100px;
-    border-radius: 3px;
-  }
-
-  .beautify-button {
-    background-color: #f0f0f0;
-    border: 1px solid #aaa;
-  }
-
-  .beautify-button:hover {
-    background-color: #e5e5e5;
-  }
-
-  .beautify-button:active {
-    background-color: #dadada;
-  }
-
-  .next-button {
-    background-color: #2a60eb;
-    color: white;
-    border: none;
-  }
-
-  .next-button:hover {
-    background-color: #254fb9;
-  }
-
-  .next-button:active {
-    background-color: #0f3fb8;
   }
 </style>

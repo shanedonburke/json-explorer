@@ -18,22 +18,6 @@
     editor?.getModel()?.setValue(stringify(value));
   });
 
-  function copyToClipboard() {
-    const editorValue = editor?.getModel()?.getValue();
-    if (editorValue) {
-      navigator.clipboard.writeText(editorValue);
-    }
-  }
-
-  function saveFile() {
-    const text = stringify(modelValue);
-
-    if (text === undefined) return;
-
-    const blob = new Blob([text], { type: "application/json" });
-    saveAs(blob, "output.json");
-  }
-
   onMount(async () => {
     // @ts-ignore
     self.MonacoEnvironment = {
@@ -57,6 +41,22 @@
       editor.dispose();
     };
   });
+
+  function copyToClipboard() {
+    const editorValue = editor?.getModel()?.getValue();
+    if (editorValue) {
+      navigator.clipboard.writeText(editorValue);
+    }
+  }
+
+  function saveFile() {
+    const text = stringify(modelValue);
+
+    if (text === undefined) return;
+
+    const blob = new Blob([text], { type: "application/json" });
+    saveAs(blob, "output.json");
+  }
 </script>
 
 <div class="container">

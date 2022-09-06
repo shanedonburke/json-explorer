@@ -40,70 +40,7 @@ import Toast from "../../Toast.svelte";
   let isVSplitterMouseDown = false;
 
   let shouldShowResetToast = false;
-  let resetToastTimeout: number;
-
-  function getActiveModelValue(): any {
-    return getValueInModelByPath(modelValue, activeModelPathValue);
-  }
-
-  function handleRevealButtonClick() {
-    revealTreeNode(activeModelPathValue);
-  }
-
-  function handleHSplitterMouseDown() {
-    isHSplitterMouseDown = true;
-  }
-
-  function handleVSplitterMouseDown() {
-    isVSplitterMouseDown = true;
-  }
-
-  function handleSplitterMouseUp() {
-    isHSplitterMouseDown = false;
-    isVSplitterMouseDown = false;
-  }
-
-  function handleSplitterMouseMove(event: MouseEvent) {
-    if (isHSplitterMouseDown) {
-      const containerWidth = containerEl.clientWidth;
-      const mouseX = event.clientX - containerEl.offsetLeft;
-      treeEl.style.width = `${mouseX - 8}px`;
-      editorEl.parentElement.style.width = `${containerWidth - mouseX - 8}px`;
-    } else if (isVSplitterMouseDown) {
-      const containerHeight = containerEl.clientHeight;
-      const mouseY = event.clientY - containerEl.offsetTop;
-      editContainerEl.style.height = `${mouseY - 8}px`;
-      searchEl.style.height = `${containerHeight - mouseY - 8}px`;
-    }
-  }
-
-  function expandAllTreeNodes() {
-    for (const pv of getAllPathValues(modelValue)) {
-      expandPath(pv.path);
-    }
-  }
-
-  function collapseAllTreeNodes() {
-    collapsePath([]);
-  }
-
-  function beautify() {
-    editor.trigger("beautify", "editor.action.formatDocument", null);
-  }
-
-  function resetActiveModel() {
-    const newModel = _.cloneDeep(modelValue);
-    const activeInputJson = _.get(parseJsonString(inputJsonValue), activeModelPathValue);
-
-    if (activeInputJson !== undefined) {
-      _.set(newModel, activeModelPathValue, activeInputJson);
-      model.update(() => newModel);
-    } else {
-      shouldShowResetToast = true;
-      clearTimeout(resetToastTimeout);
-      resetToastTimeout = setTimeout(() => shouldShowResetToast = false, 3000);
-    }
-  }
+  let resetToastTimeout: any;
 
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
@@ -186,6 +123,69 @@ import Toast from "../../Toast.svelte";
       editor.dispose();
     };
   });
+
+  function getActiveModelValue(): any {
+    return getValueInModelByPath(modelValue, activeModelPathValue);
+  }
+
+  function handleRevealButtonClick() {
+    revealTreeNode(activeModelPathValue);
+  }
+
+  function handleHSplitterMouseDown() {
+    isHSplitterMouseDown = true;
+  }
+
+  function handleVSplitterMouseDown() {
+    isVSplitterMouseDown = true;
+  }
+
+  function handleSplitterMouseUp() {
+    isHSplitterMouseDown = false;
+    isVSplitterMouseDown = false;
+  }
+
+  function handleSplitterMouseMove(event: MouseEvent) {
+    if (isHSplitterMouseDown) {
+      const containerWidth = containerEl.clientWidth;
+      const mouseX = event.clientX - containerEl.offsetLeft;
+      treeEl.style.width = `${mouseX - 8}px`;
+      editorEl.parentElement.style.width = `${containerWidth - mouseX - 8}px`;
+    } else if (isVSplitterMouseDown) {
+      const containerHeight = containerEl.clientHeight;
+      const mouseY = event.clientY - containerEl.offsetTop;
+      editContainerEl.style.height = `${mouseY - 8}px`;
+      searchEl.style.height = `${containerHeight - mouseY - 8}px`;
+    }
+  }
+
+  function expandAllTreeNodes() {
+    for (const pv of getAllPathValues(modelValue)) {
+      expandPath(pv.path);
+    }
+  }
+
+  function collapseAllTreeNodes() {
+    collapsePath([]);
+  }
+
+  function beautify() {
+    editor.trigger("beautify", "editor.action.formatDocument", null);
+  }
+
+  function resetActiveModel() {
+    const newModel = _.cloneDeep(modelValue);
+    const activeInputJson = _.get(parseJsonString(inputJsonValue), activeModelPathValue);
+
+    if (activeInputJson !== undefined) {
+      _.set(newModel, activeModelPathValue, activeInputJson);
+      model.update(() => newModel);
+    } else {
+      shouldShowResetToast = true;
+      clearTimeout(resetToastTimeout);
+      resetToastTimeout = setTimeout(() => shouldShowResetToast = false, 3000);
+    }
+  }
 </script>
 
 <div bind:this={containerEl} class="container">

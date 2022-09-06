@@ -23,6 +23,16 @@
     isEditing = _.isEqual(modelPath, value);
   });
 
+  expandedModelPaths.subscribe((value) => {
+    isExpanded = false;
+
+    for (const path of value) {
+      if (_.isEqual(path, modelPath)) {
+        isExpanded = true;
+      }
+    }
+  });
+
   function expand(event: PointerEvent) {
     event.stopPropagation();
     expandPath(modelPath);
@@ -36,16 +46,6 @@
   function handleThisNodeClick() {
     activeModelPath.update(() => modelPath);
   }
-
-  expandedModelPaths.subscribe((value) => {
-    isExpanded = false;
-
-    for (const path of value) {
-      if (_.isEqual(path, modelPath)) {
-        isExpanded = true;
-      }
-    }
-  });
 </script>
 
 <div>

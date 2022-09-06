@@ -7,14 +7,14 @@
 
   let isEditing = false;
 
+  activeModelPath.subscribe((value) => {
+    isEditing = _.isEqual(modelPath, value);
+  });
+
   function handleClick() {
     revealTreeNode(modelPath);
     activeModelPath.update(() => modelPath);
   }
-
-  activeModelPath.subscribe((value) => {
-    isEditing = _.isEqual(modelPath, value);
-  });
 </script>
 
 <div class="result" on:click={handleClick} class:selected={isEditing}>

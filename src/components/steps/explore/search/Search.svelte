@@ -25,23 +25,6 @@
 
   model.subscribe((value) => (modelValue = value));
 
-  function handleSplitterMouseDown() {
-    isSplitterMouseDown = true;
-  }
-
-  function handleSplitterMouseMove(event: MouseEvent) {
-    if (isSplitterMouseDown) {
-      const containerWidth = containerEl.clientWidth;
-      const mouseX = event.clientX - containerEl.offsetLeft;
-      editorEl.parentElement.style.width = `${mouseX - 8}px`;
-      resultsEl.style.width = `${containerWidth - mouseX - 8}px`;
-    }
-  }
-
-  function handleSplitterMouseUp() {
-    isSplitterMouseDown = false;
-  }
-
   document.addEventListener("mousemove", handleSplitterMouseMove);
   document.addEventListener("mouseup", handleSplitterMouseUp);
 
@@ -89,6 +72,23 @@
       editor.dispose();
     };
   });
+
+  function handleSplitterMouseDown() {
+    isSplitterMouseDown = true;
+  }
+
+  function handleSplitterMouseMove(event: MouseEvent) {
+    if (isSplitterMouseDown) {
+      const containerWidth = containerEl.clientWidth;
+      const mouseX = event.clientX - containerEl.offsetLeft;
+      editorEl.parentElement.style.width = `${mouseX - 8}px`;
+      resultsEl.style.width = `${containerWidth - mouseX - 8}px`;
+    }
+  }
+
+  function handleSplitterMouseUp() {
+    isSplitterMouseDown = false;
+  }
 </script>
 
 <div bind:this={containerEl} class="container">

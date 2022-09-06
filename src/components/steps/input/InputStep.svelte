@@ -1,8 +1,8 @@
 <script lang="ts">
   import _ from "lodash";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-  import { INPUT_JSON_STORAGE_KEY, SAMPLE_JSON } from "../../../lib/constants";
   import { createEventDispatcher, onMount } from "svelte";
+  import { INPUT_JSON_STORAGE_KEY, SAMPLE_JSON } from "../../../lib/constants";
   import { inputJson, model } from "../../../lib/stores";
   import type { MonacoEditor } from "../../../lib/types";
   import { parseJsonString, stringify } from "../../../lib/util";
@@ -16,9 +16,9 @@
 
   let shouldShowLoadedToast = false;
 
-  model.subscribe((value) => (modelValue = value));
-
   const dispatch = createEventDispatcher();
+
+  model.subscribe((value) => (modelValue = value));
 
   onMount(async () => {
     // @ts-ignore
@@ -77,7 +77,11 @@
 </script>
 
 <div class="container">
-  <Toast text="Input loaded from last session" backgroundColor="#24bf58" shouldShow={shouldShowLoadedToast} />
+  <Toast
+    text="Input loaded from last session"
+    backgroundColor="#24bf58"
+    shouldShow={shouldShowLoadedToast}
+  />
   <div style="width: 100%; height: 100%">
     <div bind:this={editorEl} class="monaco-editor" />
   </div>

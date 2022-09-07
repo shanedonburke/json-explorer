@@ -124,9 +124,12 @@
       const newValue = parseJsonString(editor.getModel().getValue());
 
       if (newValue === undefined) return;
+
+      // Don't update if editor value is semantically equal to model
       if (_.isEqual(getActiveModelValue(), newValue)) return;
 
       if (_.isEmpty(activeModelPathValue)) {
+        // _.isEqual sometimes doesn't return true for {} and []
         model.update(() => newValue);
       } else {
         const newModel = _.cloneDeep(modelValue);
@@ -202,8 +205,8 @@
 
   /**
    * Reset the value in the editor to the original value (from the input JSON).
-   * Only the path being edited is affected. If the current path no longer
-   * exists in the input JSON, a toast notification is shown, and nothing happens.
+   * Only the path being edited is affected. If the current path doesn't exist
+   * in the input JSON, a toast notification is shown, and nothing happens.
    */
   function resetActiveModel() {
     const newModel = _.cloneDeep(modelValue);

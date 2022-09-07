@@ -8,15 +8,17 @@
   import { parseJsonString, stringify } from "../../../lib/util";
   import Toast from "../../Toast.svelte";
 
+  const dispatch = createEventDispatcher();
+
   let editorEl: HTMLDivElement;
   let editor: MonacoEditor;
   let Monaco: any;
 
+  /** Value of the `model` store */
   let modelValue: any;
 
+  /** Whether the "Input loaded from last session" toast should be displayed */
   let shouldShowLoadedToast = false;
-
-  const dispatch = createEventDispatcher();
 
   model.subscribe((value) => (modelValue = value));
 
@@ -28,10 +30,12 @@
       },
     };
 
+    // Input JSON is stored in local storage
     const localStorageValue = localStorage.getItem(INPUT_JSON_STORAGE_KEY);
     if (localStorageValue !== null) {
       inputJson.update(() => localStorageValue);
 
+      // Shopw toast for 3 seconds, after 1 second
       setTimeout(() => {
         shouldShowLoadedToast = true;
         setTimeout(() => {
@@ -51,6 +55,8 @@
     });
 
     editor.getModel().onDidChangeContent(() => {
+      // Update store and local storage if the new value represents
+      // a different model
       const editorValue = editor.getModel().getValue();
       const parsedEditorValue = parseJsonString(editorValue);
       if (
@@ -67,10 +73,12 @@
     };
   });
 
+  /** Beautify the current editor text */
   function beautify() {
     editor.trigger("beautify", "editor.action.formatDocument", null);
   }
 
+  /** Proceed to the "Explore/Edit" step */
   function goToNextStep() {
     dispatch("nextStep");
   }

@@ -10,13 +10,22 @@
   } from "../../../lib/stores";
   import { getObjectEntries, pathArrayToString, valueToString } from "../../../lib/util";
 
-  export let key: string;
-  export let value: any;
+  /** Model path represented by node */
   export let modelPath: Array<string>;
 
+  /** Key to show as node title, i.e. last segment of model path */
+  export let key: string;
+
+  /** Value of model path represented by node */
+  export let value: any;
+
+  /** Whether the node is showing children*/
   let isExpanded = false;
+
+  /** Whether the model path represented by this node is currently being edited */
   let isEditing = false;
 
+  /** Value to display next to node if it's a leaf */
   $: valueDisplayText = `= ${valueToString(value)}`;
 
   activeModelPath.subscribe((value) => {
@@ -33,16 +42,19 @@
     }
   });
 
+  /** Expand this node */
   function expand(event: PointerEvent) {
     event.stopPropagation();
     expandPath(modelPath);
   }
 
+  /** Collapse this node */
   function collapse(event: PointerEvent) {
     event.stopPropagation();
     collapsePath(modelPath);
   }
 
+  /** Handle node click */
   function handleThisNodeClick() {
     activeModelPath.update(() => modelPath);
   }

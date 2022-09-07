@@ -1,20 +1,30 @@
 <script lang="ts">
+  /** Toast text */
   export let text: string;
+
+  /** Background color for the toast */
   export let backgroundColor: string;
+
+  /**
+   * Whether the toast should be shown.
+   * The exit animation starts when this is set to `false`.
+   */
   export let shouldShow = false;
 
+  /** Whether the toast is actually visible */
   let isVisible = false;
 
   $: {
     if (shouldShow) {
       isVisible = true;
     } else {
+      // Hide after 500s exit animation
       setTimeout(() => isVisible = false, 500);
     }
   }
 </script>
 
-<div class="container" class:toast-enter={shouldShow} class:toast-exit={!shouldShow && isVisible}>
+<div class="container" class:toast-enter={isVisible} class:toast-exit={!shouldShow && isVisible}>
   <div class="toast" style:background={backgroundColor}>
     <span>{text}</span>
   </div>

@@ -11,6 +11,7 @@
   let editor: MonacoEditor;
   let Monaco: any;
 
+  /** Value of the `model` store */
   let modelValue: any;
 
   model.subscribe((value) => {
@@ -42,6 +43,7 @@
     };
   });
 
+  /** Copy the output JSON to the clipboard */
   function copyToClipboard() {
     const editorValue = editor?.getModel()?.getValue();
     if (editorValue) {
@@ -49,6 +51,7 @@
     }
   }
 
+  /** Open a dialog to save the output JSON to a file */
   function saveFile() {
     const text = stringify(modelValue);
 

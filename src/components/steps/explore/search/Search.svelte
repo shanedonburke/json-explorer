@@ -71,11 +71,7 @@
 
   /** Update the search results based on the query */
   function executeSearch() {
-    const editorValue = editor?.getModel()?.getValue();
-
-    if (_.isNil(editorValue)) return;
-
-    const query: any = parseJsonString(editorValue);
+    const query: any = parseJsonString(editor?.getModel()?.getValue());
 
     if (query === undefined) return;
 

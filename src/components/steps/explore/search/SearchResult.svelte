@@ -3,14 +3,17 @@
   import { activeModelPath } from "../../../../lib/stores";
   import { pathArrayToString, revealTreeNode } from "../../../../lib/util";
 
+  /** Path to this result */
   export let modelPath: Array<string>;
 
+  /** Whether the user is currently editing this path */
   let isEditing = false;
 
   activeModelPath.subscribe((value) => {
     isEditing = _.isEqual(modelPath, value);
   });
 
+  /** Handle result click */
   function handleClick() {
     revealTreeNode(modelPath);
     activeModelPath.update(() => modelPath);

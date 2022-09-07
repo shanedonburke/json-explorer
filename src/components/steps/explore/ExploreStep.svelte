@@ -20,32 +20,48 @@
     stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "../../../lib/types";
-import Toast from "../../Toast.svelte";
-
-  let modelValue: any;
+  import Toast from "../../Toast.svelte";
 
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;
   let Monaco: any;
-
-  let activeModelPathValue: Array<string> = [];
-  let inputJsonValue = "";
 
   let containerEl: HTMLDivElement = null;
   let editContainerEl: HTMLDivElement = null;
   let treeEl: HTMLDivElement = null;
   let searchEl: HTMLDivElement = null;
 
+  /** Splitter between tree/edit */
+  let hSplitterEl: HTMLDivElement = null;
+
+  /** Splitter between explore/search */
+  let vSplitterEl: HTMLDivElement = null;
+
+  /** Value of the `model` store */
+  let modelValue: any;
+
+  /** Path currently being edited */
+  let activeModelPathValue: Array<string> = [];
+
+  /** Value of the inputJson store */
+  let inputJsonValue = "";
+
+  /** Whether the splitter between tree/edit is being dragged */
   let isHSplitterMouseDown = false;
+
+  /** Whether the splitter between explore/search is being dragged */
   let isVSplitterMouseDown = false;
 
+  /** Whether the toast notification for resetting a value should be shown */
   let shouldShowResetToast = false;
+
+  /** Timeout for hiding the reset toast */
   let resetToastTimeout: any;
 
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
 
-  inputJson.subscribe((value) => inputJsonValue = value);
+  inputJson.subscribe((value) => (inputJsonValue = value));
 
   model.subscribe((value) => {
     modelValue = value;
@@ -124,72 +140,99 @@ import Toast from "../../Toast.svelte";
     };
   });
 
+  /** Get the model value for the path being edited */
   function getActiveModelValue(): any {
     return getValueInModelByPath(modelValue, activeModelPathValue);
   }
 
+  /** Reveal the tree node being edited */
   function handleRevealButtonClick() {
     revealTreeNode(activeModelPathValue);
   }
 
+  /** Handle mouse down on splitter between tree/edit */
   function handleHSplitterMouseDown() {
     isHSplitterMouseDown = true;
   }
 
+  /** Handle mouse down on splitter between explore/search */
   function handleVSplitterMouseDown() {
     isVSplitterMouseDown = true;
   }
 
+  /** Handle mouse up on both splitters */
   function handleSplitterMouseUp() {
     isHSplitterMouseDown = false;
     isVSplitterMouseDown = false;
   }
 
+  /** Handle mouse move on either splitter */
   function handleSplitterMouseMove(event: MouseEvent) {
     if (isHSplitterMouseDown) {
+      const splitterWidth = hSplitterEl.offsetWidth;
       const containerWidth = containerEl.clientWidth;
       const mouseX = event.clientX - containerEl.offsetLeft;
-      treeEl.style.width = `${mouseX - 8}px`;
-      editorEl.parentElement.style.width = `${containerWidth - mouseX - 8}px`;
+      treeEl.style.width = `${mouseX - splitterWidth / 2}px`;
+      editorEl.parentElement.style.width = `${containerWidth - mouseX - splitterWidth / 2}px`;
     } else if (isVSplitterMouseDown) {
+      const splitterHeight = vSplitterEl.offsetHeight;
       const containerHeight = containerEl.clientHeight;
       const mouseY = event.clientY - containerEl.offsetTop;
-      editContainerEl.style.height = `${mouseY - 8}px`;
-      searchEl.style.height = `${containerHeight - mouseY - 8}px`;
+      editContainerEl.style.height = `${mouseY - splitterHeight / 2}px`;
+      searchEl.style.height = `${containerHeight - mouseY - splitterHeight / 2}px`;
     }
   }
 
+  /** Expand every tree node, including nested ones */
   function expandAllTreeNodes() {
     for (const pv of getAllPathValues(modelValue)) {
       expandPath(pv.path);
     }
   }
 
+  /** Collapse every tree node, including nested ones */
   function collapseAllTreeNodes() {
     collapsePath([]);
   }
 
+  /** Beautify current editor code */
   function beautify() {
     editor.trigger("beautify", "editor.action.formatDocument", null);
   }
 
+  /**
+   * Reset the value in the editor to the original value (from the input JSON).
+   * Only the path being edited is affected. If the current path no longer
+   * exists in the input JSON, a toast notification is shown, and nothing happens.
+   */
   function resetActiveModel() {
     const newModel = _.cloneDeep(modelValue);
-    const activeInputJson = _.get(parseJsonString(inputJsonValue), activeModelPathValue);
+    const activeInputJson = _.get(
+      parseJsonString(inputJsonValue),
+      activeModelPathValue
+    );
 
     if (activeInputJson !== undefined) {
       _.set(newModel, activeModelPathValue, activeInputJson);
       model.update(() => newModel);
     } else {
+      // Show toast
       shouldShowResetToast = true;
       clearTimeout(resetToastTimeout);
-      resetToastTimeout = setTimeout(() => shouldShowResetToast = false, 3000);
+      resetToastTimeout = setTimeout(
+        () => (shouldShowResetToast = false),
+        3000
+      );
     }
   }
 </script>
 
 <div bind:this={containerEl} class="container">
-  <Toast text="Property doesn't exist in the input JSON" backgroundColor="#d12424" shouldShow={shouldShowResetToast} />
+  <Toast
+    text="Property doesn't exist in the input JSON"
+    backgroundColor="#d12424"
+    shouldShow={shouldShowResetToast}
+  />
   <div bind:this={editContainerEl} class="edit-container">
     <div bind:this={treeEl} class="tree">
       <div class="tree-controls">
@@ -212,7 +255,11 @@ import Toast from "../../Toast.svelte";
         <TreeNode key="Root" value={modelValue} modelPath={[]} />
       </div>
     </div>
-    <div class="splitter h-splitter" on:mousedown={handleHSplitterMouseDown} />
+    <div
+      bind:this={hSplitterEl}
+      class="splitter h-splitter"
+      on:mousedown={handleHSplitterMouseDown}
+    />
     <div class="monaco-editor-container">
       <div class="editor-controls">
         <button
@@ -244,7 +291,11 @@ import Toast from "../../Toast.svelte";
       <div bind:this={editorEl} class="monaco-editor" />
     </div>
   </div>
-  <div class="splitter v-splitter" on:mousedown={handleVSplitterMouseDown} />
+  <div
+    bind:this={vSplitterEl}
+    class="splitter v-splitter"
+    on:mousedown={handleVSplitterMouseDown}
+  />
   <div bind:this={searchEl} class="search-container">
     <Search />
   </div>

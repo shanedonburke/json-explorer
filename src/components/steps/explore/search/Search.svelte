@@ -1,5 +1,5 @@
 <script lang="ts">
-  import _, { size } from "lodash";
+  import _ from "lodash";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
   import { getAllPathValues, parseJsonString } from "../../../../lib/util";
@@ -7,22 +7,30 @@
   import { model } from "../../../../lib/stores";
   import type { MonacoEditor, PathValuePair } from "../../../../lib/types";
 
-  let modelValue: any;
-
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;
   let Monaco: any;
 
-  let pathValues: Array<PathValuePair> = [];
-  let searchResults: Array<PathValuePair> = [];
-
   let containerEl: HTMLDivElement = null;
   let resultsEl: HTMLDivElement = null;
+  let splitterEl: HTMLDivElement = null;
 
+  /** Value of the `model` store */
+  let modelValue: any;
+
+  /** Key-value pairs of all properties and elements in the model */
+  let pathValues: Array<PathValuePair> = [];
+
+  /** Results of the current search query */
+  let searchResults: Array<PathValuePair> = [];
+
+  /** Whether the user is dragging the splitter */
   let isSplitterMouseDown = false;
 
+  /** Whether only exact matches of the search query should be returned */
   let isSearchExact = false;
 
+  // Refresh results when "Exact" is toggled
   $: isSearchExact, executeSearch();
 
   model.subscribe((value) => {
@@ -61,6 +69,7 @@
     };
   });
 
+  /** Update the search results based on the query */
   function executeSearch() {
     const editorValue = editor?.getModel()?.getValue();
 
@@ -71,10 +80,14 @@
     if (query === undefined) return;
 
     if (isSearchExact) {
-      searchResults = pathValues.filter((pv) => _.isEqual(pv.value, query));
+      const matches = pathValues.filter((pv) => _.isEqual(pv.value, query));
+      matches.sort((a, b) => a.path.length - b.path.length);
+      searchResults = matches;
     } else {
+      // Will include non-leaf matches
       const allMatches = pathValues.filter((pv) => {
         if (_.isNumber(query) || query === null) {
+          // _.isMatch won't return true for numbers and null
           return pv.value === query;
         } else {
           return _.isMatch(pv.value, query);
@@ -83,6 +96,7 @@
       const leafMatches = allMatches.filter((pv) => {
         return !allMatches.some(
           (pv2) =>
+            // Some other matched path that's an extension of pv.path
             pv2.path.length > pv.path.length &&
             pv.path.every((pathSegment, i) => pv2.path[i] === pathSegment)
         );
@@ -92,19 +106,23 @@
     }
   }
 
+  /** Mouse down on splitter */
   function handleSplitterMouseDown() {
     isSplitterMouseDown = true;
   }
 
+  /** Mouse drag on splitter */
   function handleSplitterMouseMove(event: MouseEvent) {
     if (isSplitterMouseDown) {
+      const splitterWidth = splitterEl.offsetWidth;
       const containerWidth = containerEl.clientWidth;
       const mouseX = event.clientX - containerEl.offsetLeft;
-      editorEl.parentElement.style.width = `${mouseX - 8}px`;
-      resultsEl.style.width = `${containerWidth - mouseX - 8}px`;
+      editorEl.parentElement.style.width = `${mouseX - splitterWidth / 2}px`;
+      resultsEl.style.width = `${containerWidth - mouseX - splitterWidth / 2}px`;
     }
   }
 
+  /** Mouse up on splitter */
   function handleSplitterMouseUp() {
     isSplitterMouseDown = false;
   }
@@ -118,7 +136,11 @@
       <input type="checkbox" bind:checked={isSearchExact} />
     </div>
   </div>
-  <div class="splitter" on:mousedown={handleSplitterMouseDown} />
+  <div
+    bind:this={splitterEl}
+    class="splitter"
+    on:mousedown={handleSplitterMouseDown}
+  />
   <div bind:this={resultsEl} class="results">
     {#if _.size(searchResults) === 0}
       <div class="search-help">

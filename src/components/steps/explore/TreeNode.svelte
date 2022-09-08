@@ -35,10 +35,8 @@
   expandedModelPaths.subscribe((value) => {
     isExpanded = false;
 
-    for (const path of value) {
-      if (_.isEqual(path, modelPath)) {
-        isExpanded = true;
-      }
+    if (value.some((path) => _.isEqual(path, modelPath))) {
+      isExpanded = true;
     }
   });
 

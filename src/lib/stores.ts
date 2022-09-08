@@ -27,6 +27,11 @@ export function expandPath(path: Array<string>, expandParents: boolean = true): 
   }
 }
 
+export function expandAllPaths(allPaths: Array<Array<string>>) {
+  expandedModelPaths.update(() => allPaths);
+  setTimeout(() => console.log("here"));
+}
+
 export function collapsePath(path: Array<string>): void {
   expandedModelPaths.update((existingPaths) => {
     const newPaths = _.filter(existingPaths, (existingPath) => {

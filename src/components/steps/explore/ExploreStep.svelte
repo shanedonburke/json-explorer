@@ -7,7 +7,7 @@
   import {
     activeModelPath,
     collapsePath,
-    expandPath,
+    expandAllPaths,
     inputJson,
     model,
   } from "../../../lib/stores";
@@ -188,9 +188,7 @@
 
   /** Expand every tree node, including nested ones */
   function expandAllTreeNodes() {
-    for (const pv of getAllPathValues(modelValue)) {
-      expandPath(pv.path, false);
-    }
+    expandAllPaths(getAllPathValues(modelValue).map((pv) => pv.path));
   }
 
   /** Collapse every tree node, including nested ones */

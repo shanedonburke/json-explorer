@@ -189,7 +189,7 @@
   /** Expand every tree node, including nested ones */
   function expandAllTreeNodes() {
     for (const pv of getAllPathValues(modelValue)) {
-      expandPath(pv.path);
+      expandPath(pv.path, false);
     }
   }
 

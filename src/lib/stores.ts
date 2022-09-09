@@ -1,50 +1,68 @@
 import { writable, type Writable } from "svelte/store";
 import _ from "lodash";
-import { stringify } from "./util";
-import { SAMPLE_JSON } from "./constants";
+import { pathArrayToString, stringify } from "./util";
+import { ROOT_NODE_KEY, SAMPLE_JSON } from "./constants";
 
 export const model: Writable<any> = writable(SAMPLE_JSON);
 
 export const activeModelPath: Writable<Array<string>> = writable([]);
 
-export const expandedModelPaths: Writable<Array<Array<string>>> = writable([]);
+export const expandedModelPaths: Writable<Map<string, boolean>> = writable(
+  new Map<string, boolean>()
+);
 
 export const inputJson: Writable<string> = writable(stringify(SAMPLE_JSON));
 
-export function expandPath(path: Array<string>, expandParents: boolean = true): void {
+export function expandPath(
+  path: Array<string>,
+  expandParents: boolean = true
+): void {
   if (expandParents) {
-    const pathsToAdd: Array<Array<string>> = [[]];
+    const pathsToAdd: Array<string> = [ROOT_NODE_KEY];
     for (let i = 0; i < path.length; i++) {
-      pathsToAdd.push(path.slice(0, i + 1));
+      pathsToAdd.push(pathArrayToString(path.slice(0, i + 1)));
     }
     expandedModelPaths.update((existingPaths) => {
-      return _.uniq([...existingPaths, ...pathsToAdd]);
+      const newPaths = new Map(existingPaths);
+      for (const newPath of pathsToAdd) {
+        newPaths.set(newPath, true);
+      }
+      return newPaths;
     });
   } else {
     expandedModelPaths.update((existingPaths) => {
-      return _.uniq([...existingPaths, path]);
+      const newPaths = new Map(existingPaths);
+      newPaths.set(pathArrayToString(path), true);
+      return newPaths;
     });
   }
 }
 
 export function expandAllPaths(allPaths: Array<Array<string>>) {
-  expandedModelPaths.update(() => allPaths);
+  console.log(allPaths.length);
+  expandedModelPaths.update((existingPaths) => {
+    const newPaths = new Map(existingPaths);
+    for (const path of allPaths) {
+      newPaths.set(pathArrayToString(path), true);
+    }
+    return newPaths;
+  });
   setTimeout(() => console.log("here"));
 }
 
 export function collapsePath(path: Array<string>): void {
-  expandedModelPaths.update((existingPaths) => {
-    const newPaths = _.filter(existingPaths, (existingPath) => {
-      if (existingPath.length < path.length) {
-        return true;
-      }
-      for (let i = 0; i < path.length; i++) {
-        if (existingPath[i] !== path[i]) {
-          return true;
-        }
-      }
-      return false;
+  if (path.length === 0) {
+    expandedModelPaths.update(() => new Map());
+  } else {
+    expandedModelPaths.update((existingPaths) => {
+      const pathString = pathArrayToString(path);
+        const newPaths = new Map(existingPaths);
+        newPaths.forEach((_value, key) => {
+          if (key.startsWith(pathString)) {
+            newPaths.set(key, false);
+          }
+        });
+        return newPaths;
     });
-    return newPaths;
-  });
+  }
 }

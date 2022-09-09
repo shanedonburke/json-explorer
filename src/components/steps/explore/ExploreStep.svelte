@@ -21,6 +21,7 @@
   } from "../../../lib/util";
   import type { MonacoEditor } from "../../../lib/types";
   import Toast from "../../Toast.svelte";
+  import { ROOT_NODE_KEY } from "../../../lib/constants";
 
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;
@@ -176,13 +177,17 @@
       const containerWidth = containerEl.clientWidth;
       const mouseX = event.clientX - containerEl.offsetLeft;
       treeEl.style.width = `${mouseX - splitterWidth / 2}px`;
-      editorEl.parentElement.style.width = `${containerWidth - mouseX - splitterWidth / 2}px`;
+      editorEl.parentElement.style.width = `${
+        containerWidth - mouseX - splitterWidth / 2
+      }px`;
     } else if (isVSplitterMouseDown) {
       const splitterHeight = vSplitterEl.offsetHeight;
       const containerHeight = containerEl.clientHeight;
       const mouseY = event.clientY - containerEl.offsetTop;
       editContainerEl.style.height = `${mouseY - splitterHeight / 2}px`;
-      searchEl.style.height = `${containerHeight - mouseY - splitterHeight / 2}px`;
+      searchEl.style.height = `${
+        containerHeight - mouseY - splitterHeight / 2
+      }px`;
     }
   }
 
@@ -253,7 +258,7 @@
         </button>
       </div>
       <div class="tree-nodes">
-        <TreeNode key="Root" value={modelValue} modelPath={[]} />
+        <TreeNode key={ROOT_NODE_KEY} value={modelValue} modelPath={[]} />
       </div>
     </div>
     <div

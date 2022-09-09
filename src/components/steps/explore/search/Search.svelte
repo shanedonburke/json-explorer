@@ -2,7 +2,11 @@
   import _ from "lodash";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { onMount } from "svelte";
-  import { getAllPathValues, parseJsonString } from "../../../../lib/util";
+  import {
+    getAllPathValues,
+    parseJsonString,
+    pathArrayToString,
+  } from "../../../../lib/util";
   import SearchResult from "./SearchResult.svelte";
   import { model } from "../../../../lib/stores";
   import type { MonacoEditor, PathValuePair } from "../../../../lib/types";
@@ -90,11 +94,12 @@
         }
       });
       const leafMatches = allMatches.filter((pv) => {
+        const pvPathString = pathArrayToString(pv.path);
         return !allMatches.some(
           (pv2) =>
-            // Some other matched path that's an extension of pv.path
+            // Some other path that's an extension of pv.path
             pv2.path.length > pv.path.length &&
-            pv.path.every((pathSegment, i) => pv2.path[i] === pathSegment)
+            pathArrayToString(pv2.path).startsWith(pvPathString)
         );
       });
       leafMatches.sort((a, b) => a.path.length - b.path.length);
@@ -114,7 +119,9 @@
       const containerWidth = containerEl.clientWidth;
       const mouseX = event.clientX - containerEl.offsetLeft;
       editorEl.parentElement.style.width = `${mouseX - splitterWidth / 2}px`;
-      resultsEl.style.width = `${containerWidth - mouseX - splitterWidth / 2}px`;
+      resultsEl.style.width = `${
+        containerWidth - mouseX - splitterWidth / 2
+      }px`;
     }
   }
 

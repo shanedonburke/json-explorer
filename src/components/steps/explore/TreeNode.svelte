@@ -33,11 +33,7 @@
   });
 
   expandedModelPaths.subscribe((value) => {
-    isExpanded = false;
-
-    if (value.some((path) => _.isEqual(path, modelPath))) {
-      isExpanded = true;
-    }
+    isExpanded = value.get(pathArrayToString(modelPath)) === true;
   });
 
   /** Expand this node */

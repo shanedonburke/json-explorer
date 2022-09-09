@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { ROOT_NODE_KEY } from "./constants";
 import { expandPath } from "./stores";
 import type { MonacoEditor, PathValuePair } from "./types";
 
@@ -29,7 +30,7 @@ export function getObjectEntries(val: any): Array<[string, any]> {
 }
 
 export function pathArrayToString(pathArr: Array<string>): string {
-  return pathArr.length > 0 ? pathArr.join(".") : "Root";
+  return pathArr.length > 0 ? pathArr.join(".") : ROOT_NODE_KEY;
 }
 
 export function setEditorValue(editor: MonacoEditor, value: any) {

@@ -18,3 +18,5 @@ export const SAMPLE_JSON: Readonly<object> = {
 };
 
 export const INPUT_JSON_STORAGE_KEY = "inputJson";
+
+export const ROOT_NODE_KEY = "Root";

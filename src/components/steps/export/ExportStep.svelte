@@ -36,6 +36,8 @@
       minimap: { enabled: false },
       overviewRulerLanes: 0,
       readOnly: true,
+      // Folding is a big performance hit on large text
+      folding: false,
     });
 
     return () => {

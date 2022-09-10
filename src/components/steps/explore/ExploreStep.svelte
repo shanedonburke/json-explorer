@@ -61,7 +61,7 @@
   let resetToastTimeout: any;
 
   /** Whether the loading spinner should be shown for the tree */
-  let shouldShowTreeSpinner = false;
+  let isTreeLoadingValue = false;
 
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
@@ -107,7 +107,7 @@
     }
   });
 
-  isTreeLoading.subscribe((value) => (shouldShowTreeSpinner = value));
+  isTreeLoading.subscribe((value) => (isTreeLoadingValue = value));
 
   onMount(async () => {
     // @ts-ignore
@@ -125,6 +125,8 @@
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
       overviewRulerLanes: 0,
+      // Folding is a big performance hit on large text
+      folding: false,
     });
 
     editor.onDidChangeModelContent(() => {
@@ -247,7 +249,7 @@
   />
   <div bind:this={editContainerEl} class="edit-container">
     <div bind:this={treeEl} class="tree-container">
-      <div class="tree" class:display-none={shouldShowTreeSpinner}>
+      <div class="tree" class:display-none={isTreeLoadingValue}>
         <div class="tree-controls">
           <button
             class="icon-btn"
@@ -268,7 +270,7 @@
           <TreeNode key={ROOT_NODE_KEY} value={modelValue} modelPath={[]} />
         </div>
       </div>
-      <div class="tree-spinner" class:display-none={!shouldShowTreeSpinner}>
+      <div class="tree-spinner" class:display-none={!isTreeLoadingValue}>
         <iconify-icon
           class="spinner-icon"
           icon="fluent:spinner-ios-20-filled"

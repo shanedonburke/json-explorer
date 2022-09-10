@@ -54,6 +54,8 @@
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
       overviewRulerLanes: 0,
+      // Folding is a big performance hit on large text
+      folding: false,
     });
 
     editor.getModel().onDidChangeContent(() => {

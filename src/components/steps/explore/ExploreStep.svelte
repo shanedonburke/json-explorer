@@ -9,6 +9,7 @@
     collapsePath,
     expandAllPaths,
     inputJson,
+    isTreeLoading,
     model,
   } from "../../../lib/stores";
   import {
@@ -59,6 +60,9 @@
   /** Timeout for hiding the reset toast */
   let resetToastTimeout: any;
 
+  /** Whether the loading spinner should be shown for the tree */
+  let shouldShowTreeSpinner = false;
+
   document.addEventListener("mouseup", handleSplitterMouseUp);
   document.addEventListener("mousemove", handleSplitterMouseMove);
 
@@ -102,6 +106,8 @@
       }
     }
   });
+
+  isTreeLoading.subscribe((value) => (shouldShowTreeSpinner = value));
 
   onMount(async () => {
     // @ts-ignore
@@ -240,25 +246,34 @@
     shouldShow={shouldShowResetToast}
   />
   <div bind:this={editContainerEl} class="edit-container">
-    <div bind:this={treeEl} class="tree">
-      <div class="tree-controls">
-        <button
-          class="icon-btn"
-          on:click={expandAllTreeNodes}
-          title="Expand all"
-        >
-          <iconify-icon icon="bx:expand-vertical" width="20" height="20" />
-        </button>
-        <button
-          class="icon-btn"
-          on:click={collapseAllTreeNodes}
-          title="Collapse all"
-        >
-          <iconify-icon icon="bx:collapse-vertical" width="20" height="20" />
-        </button>
+    <div bind:this={treeEl} class="tree-container">
+      <div class="tree" class:display-none={shouldShowTreeSpinner}>
+        <div class="tree-controls">
+          <button
+            class="icon-btn"
+            on:click={expandAllTreeNodes}
+            title="Expand all"
+          >
+            <iconify-icon icon="bx:expand-vertical" width="20" height="20" />
+          </button>
+          <button
+            class="icon-btn"
+            on:click={collapseAllTreeNodes}
+            title="Collapse all"
+          >
+            <iconify-icon icon="bx:collapse-vertical" width="20" height="20" />
+          </button>
+        </div>
+        <div class="tree-nodes">
+          <TreeNode key={ROOT_NODE_KEY} value={modelValue} modelPath={[]} />
+        </div>
       </div>
-      <div class="tree-nodes">
-        <TreeNode key={ROOT_NODE_KEY} value={modelValue} modelPath={[]} />
+      <div class="tree-spinner" class:display-none={!shouldShowTreeSpinner}>
+        <iconify-icon
+          icon="fluent:spinner-ios-20-filled"
+          width="72"
+          height="72"
+        />
       </div>
     </div>
     <div
@@ -326,8 +341,15 @@
     display: inline-block;
   }
 
-  .tree {
+  .tree-container {
     width: calc(50% - 8px);
+    height: 100%;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  .tree {
+    width: 100%;
     height: 100%;
     overflow: hidden;
     user-select: none;
@@ -343,6 +365,34 @@
   .tree-nodes {
     height: calc(100% - 24px);
     overflow: auto;
+  }
+
+  .tree-spinner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    user-select: none;
+    background-color: #f8f8f8;
+  }
+
+  .tree-spinner > iconify-icon {
+    animation-name: spin;
+    animation-duration: 1000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    color: #2a60eb;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   .splitter {

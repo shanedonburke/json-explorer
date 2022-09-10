@@ -13,6 +13,8 @@ export const expandedModelPaths: Writable<Map<string, boolean>> = writable(
 
 export const inputJson: Writable<string> = writable(stringify(SAMPLE_JSON));
 
+export const isTreeLoading: Writable<boolean> = writable(false);
+
 export function expandPath(
   path: Array<string>,
   expandParents: boolean = true
@@ -39,15 +41,19 @@ export function expandPath(
 }
 
 export function expandAllPaths(allPaths: Array<Array<string>>) {
-  console.log(allPaths.length);
-  expandedModelPaths.update((existingPaths) => {
-    const newPaths = new Map(existingPaths);
-    for (const path of allPaths) {
-      newPaths.set(pathArrayToString(path), true);
-    }
-    return newPaths;
+  isTreeLoading.update(() => true);
+  // Timeout to let spinner in tree show first
+  setTimeout(() => {
+    expandedModelPaths.update((existingPaths) => {
+      const newPaths = new Map(existingPaths);
+      for (const path of allPaths) {
+        newPaths.set(pathArrayToString(path), true);
+      }
+      return newPaths;
+    });
   });
-  setTimeout(() => console.log("here"));
+  // Will run once expansion is finished
+  setTimeout(() => isTreeLoading.update(() => false));
 }
 
 export function collapsePath(path: Array<string>): void {
@@ -56,13 +62,13 @@ export function collapsePath(path: Array<string>): void {
   } else {
     expandedModelPaths.update((existingPaths) => {
       const pathString = pathArrayToString(path);
-        const newPaths = new Map(existingPaths);
-        newPaths.forEach((_value, key) => {
-          if (key.startsWith(pathString)) {
-            newPaths.set(key, false);
-          }
-        });
-        return newPaths;
+      const newPaths = new Map(existingPaths);
+      newPaths.forEach((_value, key) => {
+        if (key.startsWith(pathString)) {
+          newPaths.set(key, false);
+        }
+      });
+      return newPaths;
     });
   }
 }

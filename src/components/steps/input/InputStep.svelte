@@ -20,6 +20,8 @@
   /** Whether the "Input loaded from last session" toast should be displayed */
   let shouldShowLoadedToast = false;
 
+  let isEditorLoading = true;
+
   model.subscribe((value) => (modelValue = value));
 
   onMount(async () => {
@@ -68,6 +70,8 @@
       }
     });
 
+    isEditorLoading = false;
+
     return () => {
       editor.dispose();
     };
@@ -90,8 +94,16 @@
     backgroundColor="#24bf58"
     shouldShow={shouldShowLoadedToast}
   />
-  <div style="width: 100%; height: 100%">
+  <div style="width: 100%; height: 100%" class:display-none={isEditorLoading}>
     <div bind:this={editorEl} class="monaco-editor" />
+  </div>
+  <div class="editor-spinner" class:display-none={!isEditorLoading}>
+    <iconify-icon
+      class="spinner-icon"
+      icon="fluent:spinner-ios-20-filled"
+      width="72"
+      height="72"
+    />
   </div>
   <div class="control-bar">
     <button class="text-btn secondary-btn" on:click={beautify}>
@@ -127,5 +139,16 @@
     display: flex;
     justify-content: flex-end;
     gap: 15px;
+  }
+
+  .editor-spinner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    user-select: none;
+    background-color: #f8f8f8;
   }
 </style>

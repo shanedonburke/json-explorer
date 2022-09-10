@@ -7,7 +7,7 @@ body {
   margin: 0;
   height: 100%;
   width: 100%;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 #app {
@@ -56,4 +56,21 @@ body {
 
 .secondary-btn:active {
   background-color: #dadada;
+}
+
+.spinner-icon {
+  animation-name: spin;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  color: #2a60eb;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

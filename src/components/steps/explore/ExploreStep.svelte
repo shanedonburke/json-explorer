@@ -270,6 +270,7 @@
       </div>
       <div class="tree-spinner" class:display-none={!shouldShowTreeSpinner}>
         <iconify-icon
+          class="spinner-icon"
           icon="fluent:spinner-ios-20-filled"
           width="72"
           height="72"
@@ -376,23 +377,6 @@
     overflow: hidden;
     user-select: none;
     background-color: #f8f8f8;
-  }
-
-  .tree-spinner > iconify-icon {
-    animation-name: spin;
-    animation-duration: 1000ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    color: #2a60eb;
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
   }
 
   .splitter {

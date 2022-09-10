@@ -20,6 +20,7 @@
   /** Whether the "Input loaded from last session" toast should be displayed */
   let shouldShowLoadedToast = false;
 
+  /** Becomes false when the editor has been loaded */
   let isEditorLoading = true;
 
   model.subscribe((value) => (modelValue = value));

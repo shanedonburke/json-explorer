@@ -1,3 +1,4 @@
+/** Input to show when the user first visits the site **/
 export const SAMPLE_JSON: Readonly<object> = {
 	a: {
 		b: 0,
@@ -17,6 +18,8 @@ export const SAMPLE_JSON: Readonly<object> = {
 	}
 };
 
+/** Key used in localStorage for input JSON */
 export const INPUT_JSON_STORAGE_KEY = "inputJson";
 
+/** Key used to reference root node */
 export const ROOT_NODE_KEY = "Root";

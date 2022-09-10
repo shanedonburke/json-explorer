@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import { model } from "../../../lib/stores";
-  import { stringify } from "../../../lib/util";
+  import { setEditorValue, stringify } from "../../../lib/util";
   import { SAMPLE_JSON } from "../../../lib/constants";
 
   let editorEl: HTMLDivElement = null;
@@ -16,7 +16,7 @@
 
   model.subscribe((value) => {
     modelValue = value;
-    editor?.getModel()?.setValue(stringify(value));
+    setEditorValue(editor, value);
   });
 
   onMount(async () => {

@@ -4,14 +4,7 @@
   import ExploreStep from "./components/steps/explore/ExploreStep.svelte";
   import { inputJson, model } from "./lib/stores";
   import ExportStep from "./components/steps/export/ExportStep.svelte";
-
-  function parseJsonString(str) {
-    try {
-      return JSON.parse(str);
-    } catch (e) {
-      return undefined;
-    }
-  }
+  import { parseJsonString } from "./lib/util";
 
   function setCurrStep(clickedStep: number): void {
     currStep = clickedStep;
@@ -24,6 +17,9 @@
     }
   });
 
+  /**
+   * Index of current step (0 for input, 1 for explore, 2 for export).
+   */
   let currStep = 0;
 </script>
 

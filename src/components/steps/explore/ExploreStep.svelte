@@ -7,7 +7,7 @@
   import {
     activeModelPath,
     collapsePath,
-    expandAllPaths,
+    expandManyPaths,
     inputJson,
     isTreeLoading,
     model,
@@ -18,6 +18,7 @@
     parseJsonString,
     pathArrayToString,
     revealTreeNode,
+    setEditorValue,
     stringify,
   } from "../../../lib/util";
   import type { MonacoEditor } from "../../../lib/types";
@@ -68,6 +69,7 @@
 
   inputJson.subscribe((value) => (inputJsonValue = value));
 
+  // Update editor value when the user changes the input JSON
   model.subscribe((value) => {
     modelValue = value;
 
@@ -77,7 +79,7 @@
     // Don't update editor if the new model value and the editor value are semantically equal
     if (!_.isEqual(editorValue, activeModelValue)) {
       if (activeModelValue !== undefined) {
-        editor?.getModel()?.setValue(stringify(activeModelValue));
+        setEditorValue(editor, activeModelValue);
       } else {
         // The current model path no longer exists due to model or input JSON changes
         if (!_.isEmpty(activeModelPathValue)) {
@@ -96,13 +98,15 @@
     }
   });
 
+  // Update editor value when user navigates to a new path
   activeModelPath.subscribe((value) => {
     activeModelPathValue = value;
     if (!_.isNil(editor?.getModel())) {
       if (_.isEmpty(value)) {
-        editor.getModel().setValue(stringify(modelValue));
+        // Navigated to root node
+        setEditorValue(editor, modelValue);
       } else {
-        editor.getModel().setValue(stringify(_.get(modelValue, value)));
+        setEditorValue(editor, _.get(modelValue, value));
       }
     }
   });
@@ -201,7 +205,7 @@
 
   /** Expand every tree node, including nested ones */
   function expandAllTreeNodes() {
-    expandAllPaths(getAllPathValues(modelValue).map((pv) => pv.path));
+    expandManyPaths(getAllPathValues(modelValue).map((pv) => pv.path));
   }
 
   /** Collapse every tree node, including nested ones */

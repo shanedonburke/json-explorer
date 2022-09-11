@@ -7,6 +7,6 @@ set -e
 npm run build
 
 # deploy
-git add -A --force
+git add --force dist
 git commit -m 'deploy'
 git subtree push --prefix=dist https://github.com/shanedonburke/json-explorer.git gh-pages

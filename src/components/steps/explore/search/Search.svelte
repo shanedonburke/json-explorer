@@ -149,7 +149,7 @@
       <div class="search-help">
         <div>
           <span>
-            Enter a search query in the form of a partial description of the
+            Enter a search query to the left in the form of a partial description of the
             value to find.
           </span>
           <br />
@@ -158,7 +158,7 @@
           <br />
           <code>[10]</code> will match <code>[10, 20, 30]</code>
           <br />
-          <code>"Hello world"</code> will match <code>"Hello world</code>
+          <code>"Hello world"</code> will match <code>"Hello world"</code>
           <br />
           <span>
             Checking <i>Exact</i> will make the search only match values that are

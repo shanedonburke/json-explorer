@@ -8,7 +8,7 @@ git checkout main
 npm run build
 
 # move change to gh-pages branch
-git stash
+git stash push -- dist/ --include-untracked
 git checkout gh-pages
 git stash pop
 

@@ -8,12 +8,12 @@ git checkout main
 npm run build
 
 # move change to gh-pages branch
-git stash push -- dist/ --include-untracked
+git add --force dist
+git stash push -- dist
 git checkout gh-pages
 git stash pop
 
 # deploy
-git add --force dist
 git commit -m 'deploy'
 git subtree push --prefix=dist https://github.com/shanedonburke/json-explorer.git gh-pages
 

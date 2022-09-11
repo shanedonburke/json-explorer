@@ -8,7 +8,7 @@ git checkout main
 # clean deployed files
 if [[ -f "dist" ]]; then
     rm -rf dist
-    git add -A
+    git add --force dist
     git commit -m "Remove dist directory"
     git push
 fi

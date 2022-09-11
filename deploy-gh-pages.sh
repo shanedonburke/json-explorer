@@ -4,7 +4,14 @@
 set -e
 
 # clean deployed files
-rm -rf dist
+if [[ -f "dist" ]]; then
+    rm -rf dist
+    git add -A
+    git commit -m "Remove dist directory"
+fi
+
+git checkout --force gh-pages
+git pull
 
 # build main branch
 git checkout main

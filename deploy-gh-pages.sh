@@ -15,7 +15,7 @@ git stash pop
 
 # deploy
 git commit -m 'deploy'
-git subtree push --prefix=dist https://github.com/shanedonburke/json-explorer.git gh-pages
+git subtree push --force --prefix=dist https://github.com/shanedonburke/json-explorer.git gh-pages
 
 # return to main branch
 git checkout main

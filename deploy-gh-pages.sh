@@ -11,9 +11,6 @@ if [[ -f "dist" ]]; then
     git push
 fi
 
-git checkout --force gh-pages
-git pull
-
 # build main branch
 git checkout main
 npm run build

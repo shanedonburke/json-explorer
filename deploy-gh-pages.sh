@@ -4,11 +4,11 @@
 set -e
 
 # clean deployed files
-if [[ -f "dist" ]]; then
-    rm -rf dist
-    git add -A
-    git commit -m "Remove dist directory"
-fi
+# if [[ -f "dist" ]]; then
+#     rm -rf dist
+#     git add -A
+#     git commit -m "Remove dist directory"
+# fi
 
 git checkout --force gh-pages
 git pull
@@ -24,3 +24,5 @@ git subtree push --prefix=dist https://github.com/shanedonburke/json-explorer.gi
 
 # don't push dist/ to main branch
 git reset --hard HEAD~1
+
+rm -rf dist/

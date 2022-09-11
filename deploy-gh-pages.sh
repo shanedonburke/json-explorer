@@ -20,11 +20,11 @@ npm run build
 
 # deploy
 git add --force dist
-git commit -m 'deploy'
-git subtree push --prefix=dist https://github.com/shanedonburke/json-explorer.git gh-pages
+git commit -m 'Deploy to Github Pages'
 git push origin `git subtree split --prefix dist main`:gh-pages --force
 
 # don't push dist/ to main branch
+git checkout main
 git reset --hard HEAD~1
 
 rm -rf dist/

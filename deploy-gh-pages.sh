@@ -3,6 +3,8 @@
 # abort on errors
 set -e
 
+git checkout main
+
 # clean deployed files
 if [[ -f "dist" ]]; then
     rm -rf dist
@@ -12,8 +14,9 @@ if [[ -f "dist" ]]; then
 fi
 
 # build main branch
-git checkout main
 npm run build
+
+sleep 5s
 
 # deploy
 git add --force dist

@@ -21,6 +21,7 @@ echo '> Build finished.'
 # deploy
 echo '> Deploying...'
 git add --force dist
+echo "$(git status)"
 git commit -m 'Deploy to Github Pages'
 git push origin `git subtree split --prefix dist main`:gh-pages --force
 

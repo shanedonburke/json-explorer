@@ -8,6 +8,7 @@ if [[ -f "dist" ]]; then
     rm -rf dist
     git add -A
     git commit -m "Remove dist directory"
+    git push
 fi
 
 git checkout --force gh-pages

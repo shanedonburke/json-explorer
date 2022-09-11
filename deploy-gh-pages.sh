@@ -7,15 +7,10 @@ set -e
 git checkout main
 npm run build
 
-# move change to gh-pages branch
-git add --force dist
-git stash push -- dist
-git checkout gh-pages
-git stash pop
-
 # deploy
+git add --force dist
 git commit -m 'deploy'
 git subtree push --force --prefix=dist https://github.com/shanedonburke/json-explorer.git gh-pages
 
-# return to main branch
-git checkout main
+# don't push dist/ to main branch
+git reset --hard HEAD~1

@@ -97,7 +97,7 @@
     backgroundColor="#24bf58"
     shouldShow={shouldShowLoadedToast}
   />
-  <div style="width: 100%; height: 100%" class:display-none={isEditorLoading}>
+  <div class="editor-container" class:display-none={isEditorLoading}>
     <div bind:this={editorEl} class="monaco-editor" />
   </div>
   <div class="editor-spinner" class:display-none={!isEditorLoading}>
@@ -127,6 +127,11 @@
     justify-content: flex-start;
     align-items: stretch;
     box-sizing: border-box;
+  }
+
+  .editor-container {
+    width: 100%;
+    height: calc(100% - 50px);
   }
 
   .monaco-editor {

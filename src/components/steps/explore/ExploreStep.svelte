@@ -1,9 +1,9 @@
 <script lang="ts">
-  import _ from "lodash";
-  import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-  import { onMount } from "svelte";
-  import TreeNode from "./TreeNode.svelte";
-  import Search from "./search/Search.svelte";
+  import _ from 'lodash';
+  import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+  import { onMount } from 'svelte';
+  import TreeNode from './TreeNode.svelte';
+  import Search from './search/Search.svelte';
   import {
     activeModelPath,
     collapsePath,
@@ -11,7 +11,7 @@
     inputJson,
     isTreeLoading,
     model,
-  } from "../../../lib/stores";
+  } from '../../../lib/stores';
   import {
     getAllPathValues,
     getValueInModelByPath,
@@ -20,10 +20,10 @@
     revealTreeNode,
     setEditorValue,
     stringify,
-  } from "../../../lib/util";
-  import type { MonacoEditor } from "../../../lib/types";
-  import Toast from "../../Toast.svelte";
-  import { ROOT_NODE_KEY } from "../../../lib/constants";
+  } from '../../../lib/util';
+  import type { MonacoEditor } from '../../../lib/types';
+  import Toast from '../../Toast.svelte';
+  import { ROOT_NODE_KEY } from '../../../lib/constants';
 
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;
@@ -47,7 +47,7 @@
   let activeModelPathValue: Array<string> = [];
 
   /** Value of the inputJson store */
-  let inputJsonValue = "";
+  let inputJsonValue = '';
 
   /** Whether the splitter between tree/edit is being dragged */
   let isHSplitterMouseDown = false;
@@ -64,8 +64,8 @@
   /** Whether the loading spinner should be shown for the tree */
   let isTreeLoadingValue = false;
 
-  document.addEventListener("mouseup", handleSplitterMouseUp);
-  document.addEventListener("mousemove", handleSplitterMouseMove);
+  document.addEventListener('mouseup', handleSplitterMouseUp);
+  document.addEventListener('mousemove', handleSplitterMouseMove);
 
   inputJson.subscribe((value) => (inputJsonValue = value));
 
@@ -121,10 +121,10 @@
       },
     };
 
-    Monaco = await import("monaco-editor");
+    Monaco = await import('monaco-editor');
     editor = Monaco.editor.create(editorEl, {
       value: stringify(getActiveModelValue()),
-      language: "json",
+      language: 'json',
       automaticLayout: true,
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
@@ -215,7 +215,7 @@
 
   /** Beautify current editor code */
   function beautify() {
-    editor.trigger("beautify", "editor.action.formatDocument", null);
+    editor.trigger('beautify', 'editor.action.formatDocument', null);
   }
 
   /**
@@ -287,7 +287,14 @@
       bind:this={hSplitterEl}
       class="splitter h-splitter"
       on:mousedown={handleHSplitterMouseDown}
-    />
+    >
+      <iconify-icon
+        icon="charm:grab-vertical"
+        width="14"
+        height="14"
+        class="grab-vertical"
+      />
+    </div>
     <div class="monaco-editor-container">
       <div class="editor-controls">
         <button
@@ -323,7 +330,14 @@
     bind:this={vSplitterEl}
     class="splitter v-splitter"
     on:mousedown={handleVSplitterMouseDown}
-  />
+  >
+    <iconify-icon
+      icon="charm:grab-horizontal"
+      width="14"
+      height="14"
+      class="grab-horizontal"
+    />
+  </div>
   <div bind:this={searchEl} class="search-container">
     <Search />
   </div>
@@ -395,6 +409,7 @@
     height: 100%;
     border-left: 1px solid #b0b0b0;
     border-right: 1px solid #b0b0b0;
+    cursor: col-resize;
   }
 
   .v-splitter {
@@ -402,6 +417,19 @@
     height: 16px;
     border-top: 1px solid #b0b0b0;
     border-bottom: 1px solid #b0b0b0;
+    cursor: row-resize;
+  }
+
+  .grab-vertical {
+    display: block;
+    position: relative;
+    top: calc(50% - 7px);
+  }
+
+  .grab-horizontal {
+    display: block;
+    position: relative;
+    left: calc(50% - 7px);
   }
 
   .monaco-editor-container {

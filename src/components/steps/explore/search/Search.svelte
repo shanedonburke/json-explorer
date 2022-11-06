@@ -77,7 +77,9 @@
   function executeSearch() {
     const query: any = parseJsonString(editor?.getModel()?.getValue());
 
-    if (query === undefined) return;
+    if (query === undefined || _.isEmpty(query)) {
+      return;
+    }
 
     if (isSearchExact) {
       const matches = pathValues.filter((pv) => _.isEqual(pv.value, query));

@@ -1,14 +1,18 @@
 <script lang="ts">
-  import _ from "lodash";
-  import TreeNode from "./TreeNode.svelte";
-  import "iconify-icon";
+  import _ from 'lodash';
+  import TreeNode from './TreeNode.svelte';
+  import 'iconify-icon';
   import {
     collapsePath,
     activeModelPath,
     expandedModelPaths,
     expandPath,
-  } from "../../../lib/stores";
-  import { getObjectEntries, pathArrayToString, valueToString } from "../../../lib/util";
+  } from '../../../lib/stores';
+  import {
+    getObjectEntries,
+    pathArrayToString,
+    valueToString,
+  } from '../../../lib/util';
 
   /** Model path represented by node */
   export let modelPath: Array<string>;
@@ -83,15 +87,17 @@
       <span class="value-text">{valueDisplayText}</span>
     {/if}
   </div>
-  <div class="children" class:display-none={!isExpanded}>
-    {#each getObjectEntries(value) as [childKey, childValue]}
-      <TreeNode
-        key={childKey}
-        value={childValue}
-        modelPath={[...modelPath, childKey]}
-      />
-    {/each}
-  </div>
+  {#if isExpanded}
+    <div class="children">
+      {#each getObjectEntries(value) as [childKey, childValue]}
+        <TreeNode
+          key={childKey}
+          value={childValue}
+          modelPath={[...modelPath, childKey]}
+        />
+      {/each}
+    </div>
+  {/if}
 </div>
 
 <style>

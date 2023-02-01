@@ -20,6 +20,7 @@
     revealTreeNode,
     setEditorValue,
     stringify,
+    pathStringToArray,
   } from '../../../lib/util';
   import type { MonacoEditor } from '../../../lib/types';
   import Toast from '../../Toast.svelte';
@@ -63,6 +64,15 @@
 
   /** Whether the loading spinner should be shown for the tree */
   let isTreeLoadingValue = false;
+
+  /** Whether the user is manually editing the path string */
+  let isEditingPath = false;
+
+  /** Whether the path string the user has entered is valid */
+  let isEditedPathValid = true;
+
+  /** Input for manual path editing */
+  let pathInputEl: HTMLInputElement = null;
 
   document.addEventListener('mouseup', handleSplitterMouseUp);
   document.addEventListener('mousemove', handleSplitterMouseMove);
@@ -213,9 +223,65 @@
     collapsePath([]);
   }
 
+  /** Edit parent of current node and reveal in tree */
+  function goToParent() {
+    if (activeModelPathValue.length > 0) {
+      const newPath = _.cloneDeep(activeModelPathValue);
+      newPath.pop();
+      activeModelPath.set(newPath);
+      revealTreeNode(newPath);
+    }
+  }
+
   /** Beautify current editor code */
   function beautify() {
     editor.trigger('beautify', 'editor.action.formatDocument', null);
+  }
+
+  /** Show input element for path string */
+  function editPath() {
+    isEditedPathValid = true;
+    isEditingPath = true;
+    setTimeout(() => {
+      let inputVal = pathArrayToString(activeModelPathValue);
+      if (inputVal === 'Root') {
+        inputVal = '';
+      }
+      pathInputEl.value = inputVal;
+      pathInputEl.focus();
+    });
+  }
+
+  /** Finalize or cancel path editing if Enter/Esc was pressed */
+  function onPathInputKeyDown(e: KeyboardEvent) {
+    if (e.key === 'Enter') {
+      finalizePathEdit();
+    } else if (e.key === 'Escape') {
+      isEditingPath = false;
+    }
+  }
+
+  /** Determine whether user-entered path is a valid model path */
+  function onPathInputInput() {
+    const pathArr = pathStringToArray(pathInputEl.value);
+    isEditedPathValid =
+      pathArr.length > 0 ? _.get(modelValue, pathArr) !== undefined : true;
+  }
+
+  /** Navigate to the model path entered by the user */
+  function finalizePathEdit() {
+    if (!isEditingPath) {
+      isEditingPath = false;
+      return;
+    }
+
+    const newPath = pathStringToArray(pathInputEl.value);
+    const val = newPath.length > 0 ? _.get(modelValue, newPath) : modelValue;
+    if (val !== undefined) {
+      activeModelPath.set(newPath);
+      revealTreeNode(newPath);
+    }
+    isEditingPath = false;
   }
 
   /**
@@ -256,19 +322,53 @@
       <div class="tree" class:display-none={isTreeLoadingValue}>
         <div class="tree-controls">
           <button
-            class="icon-btn"
+            class="icon-btn icon-btn-left"
             on:click={expandAllTreeNodes}
             title="Expand all"
           >
             <iconify-icon icon="bx:expand-vertical" width="20" height="20" />
           </button>
           <button
-            class="icon-btn"
+            class="icon-btn icon-btn-left"
             on:click={collapseAllTreeNodes}
             title="Collapse all"
           >
             <iconify-icon icon="bx:collapse-vertical" width="20" height="20" />
           </button>
+          <button
+            class="icon-btn icon-btn-left"
+            on:click={goToParent}
+            title="Go to parent"
+          >
+            <iconify-icon icon="mdi:arrow-up" width="20" height="20" />
+          </button>
+          <div
+            style="display: flex; justify-content: flex-start; align-items: center; width: 100%; overflow: hidden"
+          >
+            {#if !isEditingPath}
+              <span class="edit-path-text"
+                >{pathArrayToString(activeModelPathValue)}</span
+              >
+              <iconify-icon
+                icon="material-symbols:edit"
+                width="18"
+                height="18"
+                on:click={editPath}
+              />
+            {:else}
+              <input
+                type="text"
+                class="path-input"
+                style="border: {isEditedPathValid
+                  ? '2px solid #555'
+                  : '2px solid red'}"
+                bind:this={pathInputEl}
+                on:blur={finalizePathEdit}
+                on:keydown={onPathInputKeyDown}
+                on:input={onPathInputInput}
+              />
+            {/if}
+          </div>
         </div>
         <div class="tree-nodes">
           <TreeNode key={ROOT_NODE_KEY} value={modelValue} modelPath={[]} />
@@ -311,16 +411,18 @@
         >
           <iconify-icon icon="gg:format-left" width="20" height="20" />
         </button>
-        <span class="edit-path-text"
-          >{pathArrayToString(activeModelPathValue)}</span
-        >
         <div class="spacer" />
         <button
           class="icon-btn icon-btn-right"
           on:click={resetActiveModel}
           title="Reset"
         >
-          <iconify-icon icon="ic:outline-clear" width="20" height="20" />
+          <iconify-icon
+            icon="ic:outline-clear"
+            style="color: red"
+            width="20"
+            height="20"
+          />
         </button>
       </div>
       <div bind:this={editorEl} class="monaco-editor" />
@@ -455,8 +557,22 @@
   }
 
   .edit-path-text {
-    padding: 0 8px;
+    padding: 0 4px 0 8px;
     font-weight: 500;
+    color: black;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .path-input {
+    border-radius: 2.5px;
+    margin: 0 4px;
+    width: 90%;
+  }
+
+  .path-input:focus {
+    outline: none;
   }
 
   .icon-btn {

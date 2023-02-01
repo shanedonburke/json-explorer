@@ -1,7 +1,7 @@
-import _ from "lodash";
-import { ROOT_NODE_KEY } from "./constants";
-import { expandPath } from "./stores";
-import type { MonacoEditor, PathValuePair } from "./types";
+import _ from 'lodash';
+import { ROOT_NODE_KEY } from './constants';
+import { expandPath } from './stores';
+import type { MonacoEditor, PathValuePair } from './types';
 
 /**
  * Parses a JSON string.
@@ -23,11 +23,11 @@ export function parseJsonString(str: string): any | undefined {
  */
 export function valueToString(value: any): string {
   if (_.isEqual(value, {})) {
-    return "{ }";
+    return '{ }';
   } else if (_.isEqual(value, [])) {
-    return "[ ]";
+    return '[ ]';
   } else if (value === null) {
-    return "null";
+    return 'null';
   }
   return _.toString(value);
 }
@@ -52,7 +52,15 @@ export function getObjectEntries(val: any): Array<[string, any]> {
  * @returns String key representing path
  */
 export function pathArrayToString(pathArr: Array<string>): string {
-  return pathArr.length > 0 ? pathArr.join(".") : ROOT_NODE_KEY;
+  return pathArr.length > 0 ? pathArr.join('.') : ROOT_NODE_KEY;
+}
+
+export function pathStringToArray(pathStr: string): Array<string> {
+  const str = pathStr.trim();
+  if (str === 'Root' || str === '') {
+    return [];
+  }
+  return pathStr.split('.');
 }
 
 /**
@@ -73,10 +81,11 @@ export function setEditorValue(editor: MonacoEditor, value: any) {
  * @param path Model path
  * @returns A value from the model
  */
-export function getValueInModelByPath(modelValue: any, path: Array<string>): any {
-  return _.isEmpty(path)
-    ? modelValue
-    : _.get(modelValue, path);
+export function getValueInModelByPath(
+  modelValue: any,
+  path: Array<string>
+): any {
+  return _.isEmpty(path) ? modelValue : _.get(modelValue, path);
 }
 
 /**
@@ -111,7 +120,9 @@ export function revealTreeNode(modelPath: Array<string>) {
     // Expand all paths but the one being revealed
     expandPath(modelPath.slice(0, modelPath.length - 1));
   }
-  document.getElementById(pathArrayToString(modelPath)).scrollIntoView();
+  setTimeout(() =>
+    document.getElementById(pathArrayToString(modelPath)).scrollIntoView()
+  );
 }
 
 /**
@@ -120,5 +131,5 @@ export function revealTreeNode(modelPath: Array<string>) {
  * @returns Beautified JSON
  */
 export function stringify(val: any) {
-  return JSON.stringify(val, null, "\t");
+  return JSON.stringify(val, null, '\t');
 }

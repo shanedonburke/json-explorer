@@ -1,15 +1,15 @@
 <script lang="ts">
-  import _ from "lodash";
-  import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
-  import { onMount } from "svelte";
+  import _, { isBoolean } from 'lodash';
+  import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+  import { onMount } from 'svelte';
   import {
     getAllPathValues,
     parseJsonString,
     pathArrayToString,
-  } from "../../../../lib/util";
-  import SearchResult from "./SearchResult.svelte";
-  import { model } from "../../../../lib/stores";
-  import type { MonacoEditor, PathValuePair } from "../../../../lib/types";
+  } from '../../../../lib/util';
+  import SearchResult from './SearchResult.svelte';
+  import { model } from '../../../../lib/stores';
+  import type { MonacoEditor, PathValuePair } from '../../../../lib/types';
 
   let editorEl: HTMLDivElement = null;
   let editor: MonacoEditor;
@@ -43,8 +43,8 @@
     executeSearch();
   });
 
-  document.addEventListener("mousemove", handleSplitterMouseMove);
-  document.addEventListener("mouseup", handleSplitterMouseUp);
+  document.addEventListener('mousemove', handleSplitterMouseMove);
+  document.addEventListener('mouseup', handleSplitterMouseUp);
 
   onMount(async () => {
     // @ts-ignore
@@ -54,10 +54,10 @@
       },
     };
 
-    Monaco = await import("monaco-editor");
+    Monaco = await import('monaco-editor');
     editor = Monaco.editor.create(editorEl, {
-      value: "",
-      language: "json",
+      value: '',
+      language: 'json',
       automaticLayout: true,
       scrollBeyondLastLine: false,
       minimap: { enabled: false },
@@ -77,7 +77,10 @@
   function executeSearch() {
     const query: any = parseJsonString(editor?.getModel()?.getValue());
 
-    if (query === undefined || _.isEmpty(query)) {
+    if (
+      query === undefined ||
+      (_.isEmpty(query) && !_.isBoolean(query) && !_.isNumber(query))
+    ) {
       return;
     }
 
@@ -88,7 +91,7 @@
     } else {
       // Will include non-leaf matches
       const allMatches = pathValues.filter((pv) => {
-        if (_.isNumber(query) || query === null) {
+        if (_.isNumber(query) || isBoolean(query) || query === null) {
           // _.isMatch won't return true for numbers and null
           return pv.value === query;
         } else {
@@ -137,26 +140,33 @@
   <div class="monaco-editor-container">
     <div bind:this={editorEl} class="monaco-editor" />
     <div class="search-controls">
-      <span style:font-weight={isSearchExact ? "600" : "400"}>Exact</span>
+      <span style:font-weight={isSearchExact ? '600' : '400'}>Exact</span>
       <input type="checkbox" bind:checked={isSearchExact} />
     </div>
   </div>
   <div
     bind:this={splitterEl}
-    class="splitter"
+    class="splitter h-splitter"
     on:mousedown={handleSplitterMouseDown}
-  />
+  >
+    <iconify-icon
+      icon="charm:grab-vertical"
+      width="14"
+      height="14"
+      class="grab-vertical"
+    />
+  </div>
   <div bind:this={resultsEl} class="results">
     {#if _.size(searchResults) === 0}
       <div class="search-help">
         <div>
           <span>
-            Enter a search query to the left in the form of a partial description of the
-            value to find.
+            Enter a search query to the left in the form of a partial
+            description of the value to find.
           </span>
           <br />
-          <code>{"{"} "id": 4 {"}"}</code> will match
-          <code>{"{"} "id": 4, "name": "John" {"}"}</code>
+          <code>{'{'} "id": 4 {'}'}</code> will match
+          <code>{'{'} "id": 4, "name": "John" {'}'}</code>
           <br />
           <code>[10]</code> will match <code>[10, 20, 30]</code>
           <br />
@@ -222,6 +232,9 @@
     border-right: 1px solid #b0b0b0;
     user-select: none;
     background-color: #f9f9f9;
+    cursor: col-resize;
+    display: flex;
+    align-items: center;
   }
 
   .results {
